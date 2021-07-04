@@ -1,0 +1,14 @@
+How to use k8s api from within a pod? #464
+https://github.com/kubernetes-client/javascript/issues/464
+
+How to specify a user #649
+https://github.com/kubernetes-client/javascript/issues/649
+
+loadFromOptions does not appear to work with a parsed kubeconfig #295
+https://github.com/kubernetes-client/javascript/issues/295#issuecomment-510247278
+
+serviceaccount "default" not found #300
+https://github.com/kubernetes-client/javascript/issues/300
+
+javascript/examples/in-cluster.js
+https://github.com/kubernetes-client/javascript/blob/master/examples/in-cluster.js
