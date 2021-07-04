@@ -1,3 +1,8 @@
+Initial inspiration: 
+https://learnk8s.io/real-time-dashboard
+
+In-cluster information:
+
 How to use k8s api from within a pod? #464
 https://github.com/kubernetes-client/javascript/issues/464
 
