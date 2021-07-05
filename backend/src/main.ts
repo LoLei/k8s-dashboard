@@ -1,5 +1,6 @@
 import express, { Application, Request, Response } from 'express';
 import * as k8s from '@kubernetes/client-node';
+import cors from 'cors';
 
 const kc = new k8s.KubeConfig();
 kc.loadFromDefault();
@@ -7,17 +8,19 @@ kc.loadFromDefault();
 const k8sApi = kc.makeApiClient(k8s.CoreV1Api);
 
 const app: Application = express();
-const port = 3000;
-
-app.get('/', async (req: Request, res: Response): Promise<Response> => {
-  return res.status(200).send({
-    message: 'Hello World!',
-  });
-});
+app.use(
+  cors({
+    origin: '*',
+    methods: ['GET'],
+  })
+);
+// TODO: Do not hardcode port
+const port = 4000;
 
 app.get('/api/k8s/pods', async (req: Request, res: Response): Promise<Response> => {
-  const k8sRes = await k8sApi.listPodForAllNamespaces();
+  console.log(`Got request for pods on ${req.hostname} from ${req.ip}`);
 
+  const k8sRes = await k8sApi.listPodForAllNamespaces();
   const namespacedPods: NamespacedPods = {};
   k8sRes.body.items.forEach((v1p) => {
     const pod = {
