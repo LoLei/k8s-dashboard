@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
 function App(): JSX.Element {
   const [count, setCount] = useState<number>(0);
+  const [pods, setPods] = useState<string[]>([]);
 
   const callApi = async (): Promise<void> => {
     // TODO: Do not use localhost and hardcoded port
@@ -12,7 +13,10 @@ function App(): JSX.Element {
     console.log(json);
   };
 
-  callApi();
+
+  useEffect(() => {
+    callApi();
+  }, []);
 
   return (
     <div className="App">
@@ -54,3 +58,13 @@ function App(): JSX.Element {
 }
 
 export default App;
+
+type NamespacedPods = Record<string, PodResource[]>;
+
+interface PodResource {
+  name?: string;
+  namespace?: string;
+  nodeName?: string;
+  phase?: string;
+  startTime?: Date;
+}
