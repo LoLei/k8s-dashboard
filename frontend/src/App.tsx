@@ -3,6 +3,7 @@ import './App.css';
 
 function App(): JSX.Element {
   const [namespacedPods, setNamespacedPods] = useState<NamespacedPods>({});
+  const [selectedNamespace, setSelectedNamespace] = useState<string>('');
 
   const callApi = async (): Promise<ApiResponse> => {
     // TODO: Do not use localhost and hardcoded port
@@ -19,9 +20,24 @@ function App(): JSX.Element {
   return (
     <div className="App">
       <main className="App-main">
-        {Object.keys(namespacedPods).map((k, idx) => {
-          return <div key={idx}>{k}</div>;
-        })}
+        <div className="namespaces">
+          <h3>Namespaces:</h3>
+          {Object.keys(namespacedPods).map((ns, idx) => {
+            return (
+              <div key={idx} onClick={() => setSelectedNamespace(ns)}>
+                {ns}
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="pods">
+          <h3>Pods:</h3>
+          {selectedNamespace !== '' &&
+            namespacedPods[selectedNamespace].map((pod, idx) => {
+              return <div key={idx}>{pod.name}</div>;
+            })}
+        </div>
       </main>
     </div>
   );
