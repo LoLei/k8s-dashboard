@@ -24,7 +24,11 @@ function App(): JSX.Element {
           <h3>Namespaces:</h3>
           {Object.keys(namespacedPods).map((ns, idx) => {
             return (
-              <div key={idx} onClick={() => setSelectedNamespace(ns)}>
+              <div
+                key={idx}
+                className={ns === selectedNamespace ? 'namespace-selected' : 'namespace'}
+                onClick={() => setSelectedNamespace(ns)}
+              >
                 {ns}
               </div>
             );
@@ -32,7 +36,7 @@ function App(): JSX.Element {
         </div>
 
         <div className="pods">
-          <h3>Pods:</h3>
+          {selectedNamespace !== '' && <h3>Pods:</h3>}
           {selectedNamespace !== '' &&
             namespacedPods[selectedNamespace].map((pod, idx) => {
               return <div key={idx}>{pod.name}</div>;

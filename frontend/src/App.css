@@ -24,6 +24,16 @@
   color: white;
 }
 
+.App-main > .namespaces > .namespace {
+  cursor: pointer;
+}
+
+.App-main > .namespaces > .namespace-selected {
+  cursor: pointer;
+  font-weight: bold;
+}
+
+
 .App-link {
   color: #61dafb;
 }
