@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import logo from './logo.svg';
 import './App.css';
 
 function App(): JSX.Element {
@@ -33,6 +32,7 @@ export default App;
 interface ApiResponse {
   items: NamespacedPods;
 }
+
 type NamespacedPods = Record<string, PodResource[]>;
 
 interface PodResource {
