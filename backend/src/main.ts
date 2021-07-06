@@ -35,8 +35,15 @@ app.get('/api/k8s/pods:full?', async (req: Request, res: Response): Promise<Resp
       name: v1p.metadata?.name,
       namespace: v1p.metadata?.namespace,
       nodeName: v1p.spec?.nodeName,
-      phase: v1p.status?.phase,
-      startTime: v1p.status?.startTime,
+      spec: { containerImages: v1p.spec?.containers.map((it) => it.image) },
+      status: {
+        phase: v1p.status?.phase,
+        startTime: v1p.status?.startTime,
+        restartCount: v1p.status?.containerStatuses?.reduce(
+          (acc, it) => (acc += it.restartCount),
+          0
+        ),
+      },
     };
 
     if (pod.namespace != null) {
@@ -65,6 +72,16 @@ interface PodResource {
   name?: string;
   namespace?: string;
   nodeName?: string;
+  spec: Spec;
+  status: Status;
+}
+
+interface Spec {
+  containerImages?: (string | undefined)[];
+}
+
+interface Status {
   phase?: string;
   startTime?: Date;
+  restartCount?: number;
 }
