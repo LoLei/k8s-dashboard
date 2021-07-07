@@ -53,7 +53,7 @@ function App(): JSX.Element {
         </div>
         <div className="pod-details">
           {selectedPod != null && <h3>Pod Details:</h3>}
-          {selectedNamespace !== '' && (
+          {selectedPod != null && (
             <>
               <div>
                 <b>Name:</b> {selectedPod?.name}
