@@ -51,6 +51,7 @@ function App(): JSX.Element {
               );
             })}
         </div>
+
         <div className="pod-details">
           {selectedPod != null && <h3>Pod Details:</h3>}
           {selectedPod != null && (
@@ -70,7 +71,16 @@ function App(): JSX.Element {
                 </ul>
               </div>
               <div>
-                <b>Phase:</b> {selectedPod?.status.phase}
+                <b>Phase:</b>{' '}
+                <span
+                  className={
+                    selectedPod?.status.phase === 'Running'
+                      ? 'pod-status-phase-running'
+                      : 'pod-status-phase-other'
+                  }
+                >
+                  {selectedPod?.status.phase}
+                </span>
               </div>
               <div>
                 <b>Start Time:</b> {selectedPod?.status.startTime}

@@ -25,6 +25,7 @@
     > .pod-selected {
       cursor: pointer;
       font-weight: bold;
+      text-decoration: underline;
     }
   }
 
@@ -36,6 +37,13 @@
     > .namespace-selected {
       cursor: pointer;
       font-weight: bold;
+      text-decoration: underline;
+    }
+  }
+
+  .pod-details {
+    .pod-status-phase-running {
+      color: green;
     }
   }
 }
