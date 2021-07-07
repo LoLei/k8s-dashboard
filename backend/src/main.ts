@@ -17,6 +17,19 @@ app.use(
 // TODO: Do not hardcode port
 const port = 4000;
 
+app.get('/api/k8s/topNodes', async (req: Request, res: Response): Promise<Response> => {
+  console.log(`Got request for pods on ${req.hostname} from ${req.ip}`);
+
+  const k8sRes = await k8s.topNodes(k8sApi);
+
+  // Replace bigints to fix TypeError: Do not know how to serialize a BigInt
+  const str = JSON.stringify(k8sRes, (_, v) => (typeof v === 'bigint' ? v.toString() : v));
+
+  return res.status(200).send({
+    topNodes: JSON.parse(str),
+  });
+});
+
 app.get('/api/k8s/pods:full?', async (req: Request, res: Response): Promise<Response> => {
   console.log(`Got request for pods on ${req.hostname} from ${req.ip}`);
 
