@@ -45,6 +45,9 @@
     .pod-status-phase-running {
       color: green;
     }
+    .pod-status-phase-other {
+      color: red;
+    }
   }
 }
 
