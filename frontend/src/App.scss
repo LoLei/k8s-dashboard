@@ -16,31 +16,32 @@
   font-size: calc(10px + 2vmin);
   color: white;
 
-  > .namespaces {
+  .namespaces {
     display: flex;
     flex-direction: column;
     text-align: left;
 
-    > .namespace {
+    .namespace {
       cursor: pointer;
     }
 
-    > .namespace-selected {
+    .namespace-selected {
       cursor: pointer;
       font-weight: bold;
       text-decoration: underline;
     }
   }
 
-  > .pods {
+  .pods {
     display: flex;
     flex-direction: column;
     text-align: left;
-    > .pod {
+
+    .pod {
       cursor: pointer;
     }
 
-    > .pod-selected {
+    .pod-selected {
       cursor: pointer;
       font-weight: bold;
       text-decoration: underline;
