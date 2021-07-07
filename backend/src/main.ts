@@ -17,18 +17,53 @@ app.use(
 // TODO: Do not hardcode port
 const port = 4000;
 
-app.get('/api/k8s/topNodes', async (req: Request, res: Response): Promise<Response> => {
+app.get('/api/k8s/topNodes:full?', async (req: Request, res: Response): Promise<Response> => {
   console.log(`Got request for pods on ${req.hostname} from ${req.ip}`);
 
   const k8sRes = await k8s.topNodes(k8sApi);
 
   // Replace bigints to fix TypeError: Do not know how to serialize a BigInt
   const str = JSON.stringify(k8sRes, (_, v) => (typeof v === 'bigint' ? v.toString() : v));
+  const obj: any[] = JSON.parse(str);
+
+  // Used mostly for debug purposes, get the full API response rather than the selected one below
+  if (req.query.full) {
+    return res.status(200).send({
+      topNodes: obj,
+    });
+  }
+
+  const filteredResponse: Node[] = obj.map((n) => {
+    return {
+      name: n.Node.metadata.name,
+      status: {
+        nodeInfo: n.Node.status.nodeInfo,
+      },
+    };
+  });
 
   return res.status(200).send({
-    topNodes: JSON.parse(str),
+    topNodes: filteredResponse,
   });
 });
+
+interface Node {
+  name: string;
+  status: NodeStatus;
+}
+
+interface NodeStatus {
+  nodeInfo: NodeInfo;
+}
+
+interface NodeInfo {
+  architecture: string;
+  containerRuntimeVersion: string;
+  kernelVersion: string;
+  kubeletVersion: string;
+  operatingSystem: string;
+  osImage: string;
+}
 
 app.get('/api/k8s/pods:full?', async (req: Request, res: Response): Promise<Response> => {
   console.log(`Got request for pods on ${req.hostname} from ${req.ip}`);
