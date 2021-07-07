@@ -64,8 +64,8 @@ function App(): JSX.Element {
               <div>
                 <b>Containers:</b>
                 <ul>
-                  {selectedPod?.spec.containerImages?.map((c) => (
-                    <li>{c}</li>
+                  {selectedPod?.spec.containerImages?.map((c, idx) => (
+                    <li key={idx}>{c}</li>
                   ))}
                 </ul>
               </div>
