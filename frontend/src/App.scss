@@ -13,23 +13,14 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: top;
   font-size: calc(10px + 2vmin);
   color: white;
 
-  > .pods {
-    > .pod {
-      cursor: pointer;
-    }
-
-    > .pod-selected {
-      cursor: pointer;
-      font-weight: bold;
-      text-decoration: underline;
-    }
-  }
-
   > .namespaces {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+
     > .namespace {
       cursor: pointer;
     }
@@ -41,7 +32,26 @@
     }
   }
 
+  > .pods {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    > .pod {
+      cursor: pointer;
+    }
+
+    > .pod-selected {
+      cursor: pointer;
+      font-weight: bold;
+      text-decoration: underline;
+    }
+  }
+
   .pod-details {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+
     .pod-status-phase-running {
       color: green;
     }

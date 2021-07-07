@@ -21,8 +21,8 @@ function App(): JSX.Element {
   return (
     <div className="App">
       <main className="App-main">
+        <h3>Namespaces:</h3>
         <div className="namespaces">
-          <h3>Namespaces:</h3>
           {Object.keys(namespacedPods).map((ns, idx) => {
             return (
               <div
@@ -36,8 +36,8 @@ function App(): JSX.Element {
           })}
         </div>
 
+        {selectedNamespace !== '' && <h3>Pods:</h3>}
         <div className="pods">
-          {selectedNamespace !== '' && <h3>Pods:</h3>}
           {selectedNamespace !== '' &&
             namespacedPods[selectedNamespace].map((pod, idx) => {
               return (
@@ -52,8 +52,8 @@ function App(): JSX.Element {
             })}
         </div>
 
+        {selectedPod != null && <h3>Pod Details:</h3>}
         <div className="pod-details">
-          {selectedPod != null && <h3>Pod Details:</h3>}
           {selectedPod != null && (
             <>
               <div>
