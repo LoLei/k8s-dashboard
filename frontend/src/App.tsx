@@ -53,7 +53,33 @@ function App(): JSX.Element {
         </div>
         <div className="pod-details">
           {selectedPod != null && <h3>Pod Details:</h3>}
-          {selectedNamespace !== '' && <div>{selectedPod?.name}</div>}
+          {selectedNamespace !== '' && (
+            <>
+              <div>
+                <b>Name:</b> {selectedPod?.name}
+              </div>
+              <div>
+                <b>Node:</b> {selectedPod?.nodeName}
+              </div>
+              <div>
+                <b>Containers:</b>
+                <ul>
+                  {selectedPod?.spec.containerImages?.map((c) => (
+                    <li>{c}</li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <b>Phase:</b> {selectedPod?.status.phase}
+              </div>
+              <div>
+                <b>Start Time:</b> {selectedPod?.status.startTime}
+              </div>
+              <div>
+                <b>Restarts:</b> {selectedPod?.status.restartCount}
+              </div>
+            </>
+          )}
         </div>
       </main>
     </div>
