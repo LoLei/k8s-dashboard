@@ -24,10 +24,12 @@
   color: white;
 }
 
+.App-main > .pods > .pod,
 .App-main > .namespaces > .namespace {
   cursor: pointer;
 }
 
+.App-main > .pods > .pod-selected,
 .App-main > .namespaces > .namespace-selected {
   cursor: pointer;
   font-weight: bold;

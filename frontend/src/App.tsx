@@ -4,6 +4,7 @@ import './App.css';
 function App(): JSX.Element {
   const [namespacedPods, setNamespacedPods] = useState<NamespacedPods>({});
   const [selectedNamespace, setSelectedNamespace] = useState<string>('');
+  const [selectedPod, setSelectedPod] = useState<PodResource | undefined>(undefined);
 
   const callApi = async (): Promise<ApiResponse> => {
     // TODO: Do not use localhost and hardcoded port
@@ -39,8 +40,20 @@ function App(): JSX.Element {
           {selectedNamespace !== '' && <h3>Pods:</h3>}
           {selectedNamespace !== '' &&
             namespacedPods[selectedNamespace].map((pod, idx) => {
-              return <div key={idx}>{pod.name}</div>;
+              return (
+                <div
+                  key={idx}
+                  className={pod === selectedPod ? 'pod-selected' : 'pod'}
+                  onClick={() => setSelectedPod(pod)}
+                >
+                  {pod.name}
+                </div>
+              );
             })}
+        </div>
+        <div className="pod-details">
+          {selectedPod != null && <h3>Pod Details:</h3>}
+          {selectedNamespace !== '' && <div>{selectedPod?.name}</div>}
         </div>
       </main>
     </div>
