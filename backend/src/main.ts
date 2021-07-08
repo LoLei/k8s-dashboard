@@ -38,6 +38,7 @@ app.get('/api/k8s/topNodes:full?', async (req: Request, res: Response): Promise<
       name: n.Node.metadata.name,
       status: {
         nodeInfo: {
+          // There does not seem to be a better way to filter the properties I want, unfortunately
           architecture: n.Node.status.nodeInfo.architecture,
           containerRuntimeVersion: n.Node.status.nodeInfo.containerRuntimeVersion,
           kernelVersion: n.Node.status.nodeInfo.kernelVersion,
