@@ -39,6 +39,8 @@ app.get('/api/k8s/topNodes:full?', async (req: Request, res: Response): Promise<
       status: {
         nodeInfo: n.Node.status.nodeInfo,
       },
+      cpu: n.CPU,
+      memory: n.Memory,
     };
   });
 
@@ -50,6 +52,8 @@ app.get('/api/k8s/topNodes:full?', async (req: Request, res: Response): Promise<
 interface Node {
   name: string;
   status: NodeStatus;
+  cpu: NodeResource;
+  memory: NodeResource;
 }
 
 interface NodeStatus {
@@ -63,6 +67,12 @@ interface NodeInfo {
   kubeletVersion: string;
   operatingSystem: string;
   osImage: string;
+}
+
+interface NodeResource {
+  capacity: string | number;
+  requestTotal: string | number;
+  limitTotal: string | number;
 }
 
 app.get('/api/k8s/pods:full?', async (req: Request, res: Response): Promise<Response> => {
