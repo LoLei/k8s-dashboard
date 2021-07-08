@@ -37,7 +37,14 @@ app.get('/api/k8s/topNodes:full?', async (req: Request, res: Response): Promise<
     return {
       name: n.Node.metadata.name,
       status: {
-        nodeInfo: n.Node.status.nodeInfo,
+        nodeInfo: {
+          architecture: n.Node.status.nodeInfo.architecture,
+          containerRuntimeVersion: n.Node.status.nodeInfo.containerRuntimeVersion,
+          kernelVersion: n.Node.status.nodeInfo.kernelVersion,
+          kubeletVersion: n.Node.status.nodeInfo.kubeletVersion,
+          operatingSystem: n.Node.status.nodeInfo.operatingSystem,
+          osImage: n.Node.status.nodeInfo.osImage,
+        },
       },
       cpu: n.CPU,
       memory: n.Memory,
