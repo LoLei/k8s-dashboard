@@ -108,7 +108,25 @@ function App(): JSX.Element {
         </div>
 
         {selectedNode != null && <h3>Node Details:</h3>}
-        {selectedNode != null && <div className="node-details">Name: {selectedNode?.name}</div>}
+        {selectedNode != null && (
+          <div className="node-details">
+            <div>
+              <b>Name:</b> {selectedNode?.name}
+            </div>
+            <div>
+              <b>Status:</b>
+              <ul>
+                {Object.entries(selectedNode?.status.nodeInfo).map((it, idx) => {
+                  return (
+                    <li key={idx}>
+                      <b>{it[0]}:</b> {it[1]}
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          </div>
+        )}
       </main>
     </div>
   );
