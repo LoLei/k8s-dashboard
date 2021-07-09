@@ -1,21 +1,33 @@
 import React, { useEffect, useState } from 'react';
+import { ApiResponsePods, NamespacedPods, PodResource, Node, ApiResponseNodes } from './types';
 import './App.scss';
 
 function App(): JSX.Element {
   const [namespacedPods, setNamespacedPods] = useState<NamespacedPods>({});
   const [selectedNamespace, setSelectedNamespace] = useState<string>('');
   const [selectedPod, setSelectedPod] = useState<PodResource | undefined>(undefined);
+  const [selectedNode, setSelectedNode] = useState<Node | undefined>(undefined);
+  const [nodes, setNodes] = useState<Node[]>([]);
 
-  const callApi = async (): Promise<ApiResponse> => {
+  const getPodsFromApi = async (): Promise<ApiResponsePods> => {
     // TODO: Do not use localhost and hardcoded port
     const res = await fetch('http://localhost:4000/api/k8s/pods');
     const json = await res.json();
     console.log(json);
-    return json as ApiResponse;
+    return json as ApiResponsePods;
+  };
+
+  const getNodesFromApi = async (): Promise<ApiResponseNodes> => {
+    // TODO: Do not use localhost and hardcoded port
+    const res = await fetch('http://localhost:4000/api/k8s/topNodes');
+    const json = await res.json();
+    console.log(json);
+    return json as ApiResponseNodes;
   };
 
   useEffect(() => {
-    callApi().then((nsp) => setNamespacedPods(nsp.items));
+    getPodsFromApi().then((r) => setNamespacedPods(r.items));
+    getNodesFromApi().then((r) => setNodes(r.topNodes));
   }, []);
 
   return (
@@ -59,7 +71,10 @@ function App(): JSX.Element {
               <div>
                 <b>Name:</b> {selectedPod?.name}
               </div>
-              <div>
+              <div
+                className={selectedPod?.nodeName === selectedNode?.name ? 'node-selected' : 'node'}
+                onClick={() => setSelectedNode(nodes.find((n) => n.name === selectedPod?.nodeName))}
+              >
                 <b>Node:</b> {selectedPod?.nodeName}
               </div>
               <div>
@@ -91,33 +106,12 @@ function App(): JSX.Element {
             </>
           )}
         </div>
+
+        {selectedNode != null && <h3>Node Details:</h3>}
+        {selectedNode != null && <div className="node-details">Name: {selectedNode?.name}</div>}
       </main>
     </div>
   );
 }
 
 export default App;
-
-interface ApiResponse {
-  items: NamespacedPods;
-}
-
-type NamespacedPods = Record<string, PodResource[]>;
-
-interface PodResource {
-  name?: string;
-  namespace?: string;
-  nodeName?: string;
-  spec: Spec;
-  status: Status;
-}
-
-interface Spec {
-  containerImages?: (string | undefined)[];
-}
-
-interface Status {
-  phase?: string;
-  startTime?: Date;
-  restartCount?: number;
-}
