@@ -1,4 +1,5 @@
 import React from 'react';
+import { NodeInfo, NodeResource } from './types';
 
 /**
  * Displays the keys and values of an object in an <ul>
@@ -24,5 +25,6 @@ export default ObjectComponent;
 
 interface Props {
   title: string;
-  objectToDisplay: Record<string, unknown>;
+  // objectToDisplay: Record<string, unknown>;
+  objectToDisplay: NodeInfo | NodeResource;
 }
