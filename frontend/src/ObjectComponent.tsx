@@ -1,8 +1,11 @@
 import React from 'react';
 
+/**
+ * Displays the keys and values of an object in an <ul>
+ */
 const ObjectComponent = (props: Props): JSX.Element => {
   return (
-    <div>
+    <>
       <b>{props.title}:</b>
       <ul>
         {Object.entries(props.objectToDisplay).map((it, idx) => {
@@ -13,7 +16,7 @@ const ObjectComponent = (props: Props): JSX.Element => {
           );
         })}
       </ul>
-    </div>
+    </>
   );
 };
 
