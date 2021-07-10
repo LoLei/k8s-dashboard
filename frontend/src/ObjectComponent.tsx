@@ -24,5 +24,5 @@ export default ObjectComponent;
 
 interface Props {
   title: string;
-  objectToDisplay: object;
+  objectToDisplay: Record<string, unknown>;
 }
