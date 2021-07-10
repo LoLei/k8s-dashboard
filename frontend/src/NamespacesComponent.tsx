@@ -27,5 +27,5 @@ export default NamespacesComponent;
 interface Props {
   namespacedPods: NamespacedPods;
   selectedNamespace: string;
-  setSelectedNamespace: (ns: string) => void
+  setSelectedNamespace: (ns: string) => void;
 }

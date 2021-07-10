@@ -3,7 +3,8 @@ import { ApiResponsePods, NamespacedPods, PodResource, Node, ApiResponseNodes } 
 import './App.scss';
 import prettyMilliseconds from 'pretty-ms';
 import ObjectComponent from './ObjectComponent';
-import NamespacesComponent from './Namespaces';
+import NamespacesComponent from './NamespacesComponent';
+import PodsComponent from './PodsComponent';
 
 function App(): JSX.Element {
   const [namespacedPods, setNamespacedPods] = useState<NamespacedPods>({});
@@ -50,21 +51,12 @@ function App(): JSX.Element {
           setSelectedNamespace={setSelectedNamespace}
         />
 
-        {selectedNamespace !== '' && <h3>Pods:</h3>}
-        <div className="pods">
-          {selectedNamespace !== '' &&
-            namespacedPods[selectedNamespace].map((pod, idx) => {
-              return (
-                <div
-                  key={idx}
-                  className={pod === selectedPod ? 'pod-selected' : 'pod'}
-                  onClick={() => setSelectedPod(pod)}
-                >
-                  {pod.name}
-                </div>
-              );
-            })}
-        </div>
+        <PodsComponent
+          namespacedPods={namespacedPods}
+          selectedNamespace={selectedNamespace}
+          selectedPod={selectedPod}
+          setSelectedPod={setSelectedPod}
+        />
 
         {selectedPod != null && <h3>Pod Details:</h3>}
         <div className="pod-details">
