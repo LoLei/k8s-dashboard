@@ -1,6 +1,7 @@
 import express, { Application, Request, Response } from 'express';
 import * as k8s from '@kubernetes/client-node';
 import cors from 'cors';
+import { NamespacedPods, Node } from './types';
 
 const kc = new k8s.KubeConfig();
 kc.loadFromDefault();
@@ -57,32 +58,6 @@ app.get('/api/k8s/topNodes:full?', async (req: Request, res: Response): Promise<
   });
 });
 
-interface Node {
-  name: string;
-  status: NodeStatus;
-  cpu: NodeResource;
-  memory: NodeResource;
-}
-
-interface NodeStatus {
-  nodeInfo: NodeInfo;
-}
-
-interface NodeInfo {
-  architecture: string;
-  containerRuntimeVersion: string;
-  kernelVersion: string;
-  kubeletVersion: string;
-  operatingSystem: string;
-  osImage: string;
-}
-
-interface NodeResource {
-  capacity: string | number;
-  requestTotal: string | number;
-  limitTotal: string | number;
-}
-
 app.get('/api/k8s/pods:full?', async (req: Request, res: Response): Promise<Response> => {
   console.log(`Got request for pods on ${req.hostname} from ${req.ip}`);
 
@@ -130,24 +105,4 @@ try {
   });
 } catch (error) {
   console.error(`Error occured: ${error.message}`);
-}
-
-type NamespacedPods = Record<string, PodResource[]>;
-
-interface PodResource {
-  name?: string;
-  namespace?: string;
-  nodeName?: string;
-  spec: Spec;
-  status: Status;
-}
-
-interface Spec {
-  containerImages?: (string | undefined)[];
-}
-
-interface Status {
-  phase?: string;
-  startTime?: Date;
-  restartCount?: number;
 }
