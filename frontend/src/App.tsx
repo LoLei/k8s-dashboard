@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { ApiResponsePods, NamespacedPods, PodResource, Node, ApiResponseNodes } from './types';
 import './App.scss';
-import ObjectComponent from './ObjectComponent';
 import NamespacesComponent from './NamespacesComponent';
 import PodsComponent from './PodsComponent';
 import PodDetailsComponent from './PodDetailsComponent';
+import NodeDetailsComponent from './NodeDetailsComponent';
 
 function App(): JSX.Element {
   const [namespacedPods, setNamespacedPods] = useState<NamespacedPods>({});
@@ -57,17 +57,7 @@ function App(): JSX.Element {
           setSelectedNode={setSelectedNode}
         />
 
-        {selectedNode != null && <h3>Node Details:</h3>}
-        {selectedNode != null && (
-          <div className="node-details">
-            <div>
-              <b>Name:</b> {selectedNode?.name}
-            </div>
-            <ObjectComponent title="Status" objectToDisplay={selectedNode?.status.nodeInfo} />
-            <ObjectComponent title="CPU" objectToDisplay={selectedNode?.cpu} />
-            <ObjectComponent title="Memory" objectToDisplay={selectedNode?.memory} />
-          </div>
-        )}
+        <NodeDetailsComponent selectedNode={selectedNode} />
       </main>
     </div>
   );
