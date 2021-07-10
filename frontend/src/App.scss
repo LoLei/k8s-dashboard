@@ -23,6 +23,10 @@
 
     .namespace {
       cursor: pointer;
+
+      &:hover {
+        text-decoration: underline;
+      }
     }
 
     .namespace-selected {
@@ -39,6 +43,10 @@
 
     .pod {
       cursor: pointer;
+
+      &:hover {
+        text-decoration: underline;
+      }
     }
 
     .pod-selected {
