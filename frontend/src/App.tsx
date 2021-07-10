@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ApiResponsePods, NamespacedPods, PodResource, Node, ApiResponseNodes } from './types';
 import './App.scss';
+import prettyMilliseconds from 'pretty-ms';
 
 function App(): JSX.Element {
   const [namespacedPods, setNamespacedPods] = useState<NamespacedPods>({});
@@ -29,6 +30,14 @@ function App(): JSX.Element {
     getPodsFromApi().then((r) => setNamespacedPods(r.items));
     getNodesFromApi().then((r) => setNodes(r.topNodes));
   }, []);
+
+  const getAgeInHours = (d: Date | undefined): string => {
+    if (d == null) {
+      return '?';
+    }
+    const diffMs = new Date().getTime() - new Date(d).getTime();
+    return prettyMilliseconds(diffMs, {compact: true});
+  };
 
   return (
     <div className="App">
@@ -98,7 +107,7 @@ function App(): JSX.Element {
                 </span>
               </div>
               <div>
-                <b>Start Time:</b> {selectedPod?.status.startTime}
+                <b>Age:</b> {getAgeInHours(selectedPod?.status.startTime)}
               </div>
               <div>
                 <b>Restarts:</b> {selectedPod?.status.restartCount}

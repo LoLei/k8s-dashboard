@@ -10,6 +10,7 @@
     "lint": "eslint . --ext .js,.ts,.jsx,.tsx"
   },
   "dependencies": {
+    "pretty-ms": "^7.0.1",
     "react": "^17.0.0",
     "react-dom": "^17.0.0"
   },
