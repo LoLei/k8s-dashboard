@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ApiResponsePods, NamespacedPods, PodResource, Node, ApiResponseNodes } from './types';
 import './App.scss';
 import prettyMilliseconds from 'pretty-ms';
+import ObjectComponent from './ObjectComponent';
 
 function App(): JSX.Element {
   const [namespacedPods, setNamespacedPods] = useState<NamespacedPods>({});
@@ -36,7 +37,7 @@ function App(): JSX.Element {
       return '?';
     }
     const diffMs = new Date().getTime() - new Date(d).getTime();
-    return prettyMilliseconds(diffMs, {compact: true});
+    return prettyMilliseconds(diffMs, { compact: true });
   };
 
   return (
@@ -122,42 +123,9 @@ function App(): JSX.Element {
             <div>
               <b>Name:</b> {selectedNode?.name}
             </div>
-            <div>
-              <b>Status:</b>
-              <ul>
-                {Object.entries(selectedNode?.status.nodeInfo).map((it, idx) => {
-                  return (
-                    <li key={idx}>
-                      <b>{it[0]}:</b> {it[1]}
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-            <div>
-              <b>CPU:</b>
-              <ul>
-                {Object.entries(selectedNode?.cpu).map((it, idx) => {
-                  return (
-                    <li key={idx}>
-                      <b>{it[0]}:</b> {it[1]}
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-            <div>
-              <b>Memory:</b>
-              <ul>
-                {Object.entries(selectedNode?.memory).map((it, idx) => {
-                  return (
-                    <li key={idx}>
-                      <b>{it[0]}:</b> {it[1]}
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
+            <ObjectComponent title="Status" objectToDisplay={selectedNode?.status.nodeInfo} />
+            <ObjectComponent title="CPU" objectToDisplay={selectedNode?.cpu} />
+            <ObjectComponent title="Memory" objectToDisplay={selectedNode?.memory} />
           </div>
         )}
       </main>
