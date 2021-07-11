@@ -19,16 +19,14 @@ export default function Home(): JSX.Element {
   const [nodes, setNodes] = useState<Node[]>([]);
 
   const getPodsFromApi = async (): Promise<ApiResponsePods> => {
-    // TODO: Do not use localhost and hardcoded port
-    const res = await fetch('http://localhost:4000/api/k8s/pods');
+    const res = await fetch('/api/pods');
     const json = await res.json();
     console.log(json);
     return json as ApiResponsePods;
   };
 
   const getNodesFromApi = async (): Promise<ApiResponseNodes> => {
-    // TODO: Do not use localhost and hardcoded port
-    const res = await fetch('http://localhost:4000/api/k8s/topNodes');
+    const res = await fetch('/api/nodes');
     const json = await res.json();
     console.log(json);
     return json as ApiResponseNodes;
@@ -36,7 +34,7 @@ export default function Home(): JSX.Element {
 
   useEffect(() => {
     getPodsFromApi().then((r) => setNamespacedPods(r.items));
-    getNodesFromApi().then((r) => setNodes(r.topNodes));
+    getNodesFromApi().then((r) => setNodes(r.nodes));
   }, []);
 
   return (

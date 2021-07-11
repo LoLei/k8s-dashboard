@@ -18,7 +18,7 @@ app.use(
 // TODO: Do not hardcode port
 const port = 4000;
 
-app.get('/api/k8s/topNodes:full?', async (req: Request, res: Response): Promise<Response> => {
+app.get('/api/k8s/nodes:full?', async (req: Request, res: Response): Promise<Response> => {
   console.log(`Got request for pods on ${req.hostname} from ${req.ip}`);
 
   const k8sRes = await k8s.topNodes(k8sApi);
@@ -30,7 +30,7 @@ app.get('/api/k8s/topNodes:full?', async (req: Request, res: Response): Promise<
   // Used mostly for debug purposes, get the full API response rather than the selected one below
   if (req.query.full) {
     return res.status(200).send({
-      topNodes: obj,
+      nodes: obj,
     });
   }
 
@@ -54,7 +54,7 @@ app.get('/api/k8s/topNodes:full?', async (req: Request, res: Response): Promise<
   });
 
   return res.status(200).send({
-    topNodes: filteredResponse,
+    nodes: filteredResponse,
   });
 });
 

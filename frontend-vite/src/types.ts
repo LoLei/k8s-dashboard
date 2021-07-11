@@ -23,7 +23,7 @@ export interface Status {
 }
 
 export interface ApiResponseNodes {
-  topNodes: Node[];
+  nodes: Node[];
 }
 
 export interface Node {
