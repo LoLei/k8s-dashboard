@@ -1,0 +1,32 @@
+{
+  "name": "k8s-dashboard-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "pretty": "prettier --write .",
+    "pretty:check": "prettier --check .",
+    "lint": "eslint . --ext .js,.ts,.jsx,.tsx"
+  },
+  "dependencies": {
+    "next": "11.0.1",
+    "pretty-ms": "^7.0.1",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "sass": "^1.35.2"
+  },
+  "devDependencies": {
+    "@types/react": "17.0.14",
+    "eslint": "^7.30.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-react": "^7.24.0",
+    "prettier": "^2.3.2",
+    "eslint-config-next": "11.0.1",
+    "typescript": "4.3.5",
+    "@typescript-eslint/eslint-plugin": "^4.28.2",
+    "@typescript-eslint/parser": "^4.28.2"
+  }
+}

@@ -1,4 +1,5 @@
 {
+  "name": "k8s-dashboard-frontend",
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
