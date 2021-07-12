@@ -1,0 +1,12 @@
+FROM node:15.1.0-alpine
+
+WORKDIR /k8s-dashboard-backend-node
+COPY . .
+
+ENV NODE_ENV=production
+RUN yarn install --production
+RUN yarn cache clean
+
+EXPOSE 4000
+
+CMD [ "yarn", "start" ]
