@@ -4,7 +4,12 @@ import cors from 'cors';
 import { NamespacedPods, Node } from './types';
 
 const kc = new k8s.KubeConfig();
-kc.loadFromDefault();
+
+if (process.env.CLUSTER_DEPLOYMENT != null) {
+  kc.loadFromCluster();
+} else {
+  kc.loadFromDefault();
+}
 
 const k8sApi = kc.makeApiClient(k8s.CoreV1Api);
 

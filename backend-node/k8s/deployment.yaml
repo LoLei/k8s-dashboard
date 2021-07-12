@@ -4,6 +4,7 @@ metadata:
   name: k8s-dashboard-backend-node-configmap
 data:
   PORT: '4000'
+  CLUSTER_DEPLOYMENT: 'true'
 ---
 apiVersion: apps/v1
 kind: Deployment
