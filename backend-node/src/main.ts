@@ -15,8 +15,11 @@ app.use(
     methods: ['GET'],
   })
 );
-// TODO: Do not hardcode port
-const port = 4000;
+const port = parseInt(process.env.PORT || '4000');
+
+app.get('/api/health', async (req: Request, res: Response): Promise<Response> => {
+  return res.status(200).send({ status: 'healthy' });
+});
 
 app.get('/api/k8s/nodes:full?', async (req: Request, res: Response): Promise<Response> => {
   console.log(`Got request for pods on ${req.hostname} from ${req.ip}`);
