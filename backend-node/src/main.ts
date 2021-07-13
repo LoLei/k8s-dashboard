@@ -2,13 +2,16 @@ import express, { Application, Request, Response } from 'express';
 import * as k8s from '@kubernetes/client-node';
 import cors from 'cors';
 import { NamespacedPods, Node } from './types';
+import { IncomingMessage } from 'http';
 
 const kc = new k8s.KubeConfig();
 
 if (process.env.CLUSTER_DEPLOYMENT != null) {
   kc.loadFromCluster();
+  console.log('Loaded cluster config from cluster');
 } else {
   kc.loadFromDefault();
+  console.log('Loaded cluster config from default');
 }
 
 const k8sApi = kc.makeApiClient(k8s.CoreV1Api);
@@ -27,9 +30,18 @@ app.get('/api/health', async (req: Request, res: Response): Promise<Response> =>
 });
 
 app.get('/api/k8s/nodes:full?', async (req: Request, res: Response): Promise<Response> => {
-  console.log(`Got request for pods on ${req.hostname} from ${req.ip}`);
+  console.log(`Got request for nodes on ${req.hostname} from ${req.ip}`);
 
-  const k8sRes = await k8s.topNodes(k8sApi);
+  let k8sRes: k8s.NodeStatus[];
+  try {
+    k8sRes = await k8s.topNodes(k8sApi);
+  } catch (e) {
+    const msg = e.toString();
+    console.error(`Got error: ${msg}`);
+    return res.status(500).send({
+      msg,
+    });
+  }
 
   // Replace bigints to fix TypeError: Do not know how to serialize a BigInt
   const str = JSON.stringify(k8sRes, (_, v) => (typeof v === 'bigint' ? v.toString() : v));
@@ -69,7 +81,17 @@ app.get('/api/k8s/nodes:full?', async (req: Request, res: Response): Promise<Res
 app.get('/api/k8s/pods:full?', async (req: Request, res: Response): Promise<Response> => {
   console.log(`Got request for pods on ${req.hostname} from ${req.ip}`);
 
-  const k8sRes = await k8sApi.listPodForAllNamespaces();
+  let k8sRes: { response: IncomingMessage; body: k8s.V1PodList } =
+    await k8sApi.listPodForAllNamespaces();
+  try {
+    k8sRes = await k8sApi.listPodForAllNamespaces();
+  } catch (e) {
+    const msg = e.toString();
+    console.error(`Got error: ${msg}`);
+    return res.status(500).send({
+      msg,
+    });
+  }
 
   // Used mostly for debug purposes, get the full API response rather than the selected one below
   if (req.query.full) {
