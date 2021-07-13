@@ -14,6 +14,11 @@ if (process.env.CLUSTER_DEPLOYMENT != null) {
   console.log('Loaded cluster config from default');
 }
 
+console.log('contexts', kc.contexts);
+console.log('clusters', kc.clusters);
+console.log('users', kc.users);
+console.log('current context', kc.currentContext);
+
 const k8sApi = kc.makeApiClient(k8s.CoreV1Api);
 
 const app: Application = express();
