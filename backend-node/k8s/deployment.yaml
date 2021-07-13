@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
         - name: k8s-dashboard-backend-node
-          image: ghcr.io/lolei/k8s-dashboard-backend-node:1.0.0
+          image: ghcr.io/lolei/k8s-dashboard-backend-node:1.0.2
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 4000

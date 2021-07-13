@@ -81,8 +81,7 @@ app.get('/api/k8s/nodes:full?', async (req: Request, res: Response): Promise<Res
 app.get('/api/k8s/pods:full?', async (req: Request, res: Response): Promise<Response> => {
   console.log(`Got request for pods on ${req.hostname} from ${req.ip}`);
 
-  let k8sRes: { response: IncomingMessage; body: k8s.V1PodList } =
-    await k8sApi.listPodForAllNamespaces();
+  let k8sRes: { response: IncomingMessage; body: k8s.V1PodList };
   try {
     k8sRes = await k8sApi.listPodForAllNamespaces();
   } catch (e) {
