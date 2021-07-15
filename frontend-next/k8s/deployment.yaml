@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: k8s-dashboard-frontend-next-configmap
 data:
-  CLUSTER_API_BACKEND_URL: 'k8s-dashboard-backend-node-svc' # TODO: Needs protocol
+  CLUSTER_API_BACKEND_URL: 'http://k8s-dashboard-backend-node-svc'
   CLUSTER_API_BACKEND_PORT: '4000'
 ---
 apiVersion: apps/v1
@@ -31,12 +31,6 @@ spec:
           envFrom:
             - configMapRef:
                 name: k8s-dashboard-frontend-next-configmap
-          env:
-            - name: GITHUB_PAT
-              valueFrom:
-                secretKeyRef:
-                  name: k8s-dashboard-frontend-next-secret
-                  key: GITHUB_PAT
           livenessProbe:
             initialDelaySeconds: 10
             httpGet:
