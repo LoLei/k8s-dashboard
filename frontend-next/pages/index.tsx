@@ -63,6 +63,10 @@ export default function Home(): JSX.Element {
         <NodeDetailsComponent selectedNode={selectedNode} />
       </main>
       <footer>
+        <a href="https://lolei.dev" target="_blank" rel="noreferrer">
+          Home
+        </a>
+        {' | '}
         <a href="https://github.com/LoLei/k8s-dashboard" target="_blank" rel="noreferrer">
           Source
         </a>
