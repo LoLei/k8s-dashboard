@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
         - name: k8s-dashboard-frontend-next
-          image: ghcr.io/lolei/k8s-dashboard-frontend-next:1.0.0
+          image: ghcr.io/lolei/k8s-dashboard-frontend-next:1.0.1
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3000
