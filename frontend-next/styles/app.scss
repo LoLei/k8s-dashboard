@@ -12,6 +12,10 @@
   flex-direction: column;
   align-items: center;
 
+  .refresh-container {
+    font-size: 0.75em;
+  }
+
   .content-container {
     width: 100vw;
     display: flex;

@@ -2,10 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { ApiResponseNodes, ApiResponsePods, NamespacedPods, Node } from '../util/types';
 import ContainerNamespacedPodsComponent from '../components/ContainerNamespacedPodsComponent';
 import ContainerNodesComponent from '../components/ContainerNodesComponent';
+import { BiRefresh } from 'react-icons/bi';
 
 export default function Home(): JSX.Element {
   const [namespacedPods, setNamespacedPods] = useState<NamespacedPods>({});
   const [nodes, setNodes] = useState<Node[]>([]);
+  const [autoRefresh, setAutoRefresh] = useState<boolean>(false);
+  const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
 
   const getPodsFromApi = async (): Promise<ApiResponsePods> => {
     const res = await fetch('/api/pods');
@@ -19,13 +22,53 @@ export default function Home(): JSX.Element {
     return json as ApiResponseNodes;
   };
 
-  useEffect(() => {
+  const callApi = (): void => {
+    console.log('calling api');
     getPodsFromApi().then((r) => setNamespacedPods(r.items));
     getNodesFromApi().then((r) => setNodes(r.nodes));
+    // TODO: Update this after the calls are done
+    setLastUpdated(new Date());
+  };
+
+  useEffect(() => {
+    callApi();
   }, []);
+
+  useEffect(() => {
+    console.log(autoRefresh);
+  }, [autoRefresh]);
+
+  const handleRefreshButtonClicked = (e: React.MouseEvent<HTMLElement>) => {
+    console.log(e);
+    callApi();
+  };
+
+  const handleRefreshCheckClicked = (e: React.MouseEvent<HTMLElement>) => {
+    console.log(e);
+    setAutoRefresh(!autoRefresh);
+  };
 
   return (
     <div className="App">
+      <div className="refresh-container">
+        <button onClick={handleRefreshButtonClicked} disabled={autoRefresh}>
+          <BiRefresh />
+        </button>
+        {' | '}
+        <input type="checkbox" onClick={handleRefreshCheckClicked} />
+        <span title="30s">Auto refresh</span>
+        {' | '}
+        <span title="Last updated">
+          Last:{' '}
+          {lastUpdated.toLocaleDateString(undefined, {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+          })}
+        </span>
+      </div>
       <div className="content-container">
         <div className="container-namespaced-pods">
           <ContainerNamespacedPodsComponent namespacedPods={namespacedPods} />
