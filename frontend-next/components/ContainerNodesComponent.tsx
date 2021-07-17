@@ -1,28 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
-import { Node, ApiResponseNodes } from '../util/types';
+import { Node } from '../util/types';
 
 import NodesComponent from './NodesComponent';
 import NodeDetailsComponent from './NodeDetailsComponent';
 
-const ContainerNodesComponent = (): JSX.Element => {
-  const [nodes, setNodes] = useState<Node[]>([]);
+const ContainerNodesComponent = (props: Props): JSX.Element => {
   const [selectedNode, setSelectedNode] = useState<Node | undefined>(undefined);
-
-  const getNodesFromApi = async (): Promise<ApiResponseNodes> => {
-    const res = await fetch('/api/nodes');
-    const json = await res.json();
-    console.log(json);
-    return json as ApiResponseNodes;
-  };
-
-  useEffect(() => {
-    getNodesFromApi().then((r) => setNodes(r.nodes));
-  }, []);
 
   return (
     <>
-      <NodesComponent nodes={nodes} selectedNode={selectedNode} setSelectedNode={setSelectedNode} />
+      <NodesComponent
+        nodes={props.nodes}
+        selectedNode={selectedNode}
+        setSelectedNode={setSelectedNode}
+      />
 
       <NodeDetailsComponent selectedNode={selectedNode} />
     </>
@@ -30,3 +22,7 @@ const ContainerNodesComponent = (): JSX.Element => {
 };
 
 export default ContainerNodesComponent;
+
+interface Props {
+  nodes: Node[];
+}
