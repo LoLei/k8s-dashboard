@@ -12,80 +12,115 @@
   flex-direction: column;
   align-items: center;
 
-  .container-namespaced-pods {
+  .content-container {
+    width: 100vw;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+
     flex: 1;
 
-    .namespaces {
-      display: flex;
-      flex-direction: column;
-      text-align: left;
+    .container-namespaced-pods {
+      .namespaces {
+        display: flex;
+        flex-direction: column;
+        text-align: left;
 
-      .namespace {
-        cursor: pointer;
+        .namespace {
+          cursor: pointer;
 
-        &:hover {
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+
+        .namespace-selected {
+          cursor: pointer;
+          font-weight: bold;
           text-decoration: underline;
         }
       }
 
-      .namespace-selected {
-        cursor: pointer;
-        font-weight: bold;
-        text-decoration: underline;
-      }
-    }
+      .pods {
+        display: flex;
+        flex-direction: column;
+        text-align: left;
 
-    .pods {
-      display: flex;
-      flex-direction: column;
-      text-align: left;
+        .pod {
+          cursor: pointer;
 
-      .pod {
-        cursor: pointer;
+          &:hover {
+            text-decoration: underline;
+          }
+        }
 
-        &:hover {
+        .pod-selected {
+          cursor: pointer;
+          font-weight: bold;
           text-decoration: underline;
         }
       }
 
-      .pod-selected {
-        cursor: pointer;
-        font-weight: bold;
-        text-decoration: underline;
-      }
-    }
+      .pod-details {
+        display: flex;
+        flex-direction: column;
+        text-align: left;
 
-    .pod-details {
-      display: flex;
-      flex-direction: column;
-      text-align: left;
+        .pod-status-phase-running {
+          color: green;
+        }
 
-      .pod-status-phase-running {
-        color: green;
-      }
+        .pod-status-phase-other {
+          color: red;
+        }
 
-      .pod-status-phase-other {
-        color: red;
-      }
+        .node {
+          cursor: pointer;
 
-      .node {
-        cursor: pointer;
+          &:hover {
+            text-decoration: underline;
+          }
+        }
 
-        &:hover {
+        .node-selected {
+          font-weight: bold;
           text-decoration: underline;
         }
       }
 
-      .node-selected {
-        font-weight: bold;
-        text-decoration: underline;
+      .node-details {
+        display: flex;
+        flex-direction: column;
+        text-align: left;
       }
     }
 
-    .node-details {
-      display: flex;
-      flex-direction: column;
-      text-align: left;
+    .container-nodes {
+      .nodes {
+        display: flex;
+        flex-direction: column;
+        text-align: left;
+
+        .node {
+          cursor: pointer;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+
+        .node-selected {
+          cursor: pointer;
+          font-weight: bold;
+          text-decoration: underline;
+        }
+      }
+
+      .node-details {
+        display: flex;
+        flex-direction: column;
+        text-align: left;
+      }
     }
   }
 

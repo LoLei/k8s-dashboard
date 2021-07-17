@@ -1,11 +1,18 @@
 import React from 'react';
 import ContainerNamespacedPodsComponent from '../components/ContainerNamespacedPodsComponent';
+import ContainerNodesComponent from '../components/ContainerNodesComponent';
 
 export default function Home(): JSX.Element {
   return (
     <div className="App">
-      <div className="container-namespaced-pods">
-        <ContainerNamespacedPodsComponent />
+      <div className="content-container">
+        <div className="container-namespaced-pods">
+          <ContainerNamespacedPodsComponent />
+        </div>
+
+        <div className="container-nodes">
+          <ContainerNodesComponent />
+        </div>
       </div>
 
       <footer>
