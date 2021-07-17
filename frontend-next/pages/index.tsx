@@ -9,6 +9,20 @@ export default function Home(): JSX.Element {
   const [nodes, setNodes] = useState<Node[]>([]);
   const [autoRefresh, setAutoRefresh] = useState<boolean>(false);
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
+  const [intervalId, setIntervalId] = useState<NodeJS.Timer | undefined>(undefined);
+  const refreshRateSeconds = 30; // TODO: Make configurable (perhaps)
+
+  useEffect(() => {
+    callApi();
+  }, []);
+
+  useEffect(() => {
+    if (autoRefresh) {
+      autoRefreshLoop();
+    } else if (intervalId != null) {
+      clearInterval(intervalId);
+    }
+  }, [autoRefresh]);
 
   const getPodsFromApi = async (): Promise<ApiResponsePods> => {
     const res = await fetch('/api/pods');
@@ -25,6 +39,9 @@ export default function Home(): JSX.Element {
   const callApi = async (): Promise<void> => {
     const [promisePods, promiseNodes] = [getPodsFromApi(), getNodesFromApi()];
 
+    // TODO: Use Promise.all or Promise.allSettled
+    // (Doesn't matter much, is already concurrent)
+
     const responsePods = await promisePods;
     const responseNodes = await promiseNodes;
 
@@ -34,13 +51,13 @@ export default function Home(): JSX.Element {
     setLastUpdated(new Date());
   };
 
-  useEffect(() => {
+  const autoRefreshLoop = () => {
     callApi();
-  }, []);
-
-  useEffect(() => {
-    console.log(autoRefresh);
-  }, [autoRefresh]);
+    const id = setInterval(() => {
+      callApi();
+    }, refreshRateSeconds * 1000);
+    setIntervalId(id);
+  };
 
   const handleRefreshButtonClicked = () => {
     callApi();
@@ -58,7 +75,7 @@ export default function Home(): JSX.Element {
         </button>
         {' | '}
         <input type="checkbox" onClick={handleRefreshCheckClicked} />
-        <span title="30s">Auto refresh</span>
+        <span title={`${refreshRateSeconds}s`}>Auto refresh</span>
         {' | '}
         <span title="Last updated">
           Last:{' '}
@@ -71,6 +88,7 @@ export default function Home(): JSX.Element {
           })}
         </span>
       </div>
+
       <div className="content-container">
         <div className="container-namespaced-pods">
           <ContainerNamespacedPodsComponent namespacedPods={namespacedPods} />
