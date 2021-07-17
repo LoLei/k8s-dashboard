@@ -1,6 +1,6 @@
 import React from 'react';
 import ObjectComponent from './ObjectComponent';
-import { Node } from './types';
+import { Node } from '../util/types';
 
 const NodeDetailsComponent = (props: Props): JSX.Element => {
   return (

@@ -1,6 +1,6 @@
 import prettyMilliseconds from 'pretty-ms';
 import React from 'react';
-import { PodResource, Node } from './types';
+import { PodResource, Node } from '../util/types';
 
 const PodDetailsComponent = (props: Props): JSX.Element => {
   const getAgeInHours = (d: Date | undefined): string => {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { NamespacedPods } from './types';
+import { NamespacedPods } from '../util/types';
 
 const NamespacesComponent = (props: Props): JSX.Element => {
   return (

@@ -1,5 +1,5 @@
 import React from 'react';
-import { NamespacedPods, PodResource } from './types';
+import { NamespacedPods, PodResource } from '../util/types';
 
 const PodsComponent = (props: Props): JSX.Element => {
   return (

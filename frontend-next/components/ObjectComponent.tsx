@@ -1,5 +1,5 @@
 import React from 'react';
-import { NodeInfo, NodeResource } from './types';
+import { NodeInfo, NodeResource } from '../util/types';
 
 /**
  * Displays the keys and values of an object in an <ul>
