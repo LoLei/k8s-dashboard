@@ -54,9 +54,7 @@ const ContainerNamespacedPodsComponent = (): JSX.Element => {
         setSelectedPod={setSelectedPod}
       />
 
-      <PodDetailsComponent
-        selectedPod={selectedPod}
-      />
+      <PodDetailsComponent selectedPod={selectedPod} />
     </>
   );
 };
