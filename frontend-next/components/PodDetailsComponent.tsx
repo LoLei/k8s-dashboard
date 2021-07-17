@@ -1,6 +1,6 @@
 import prettyMilliseconds from 'pretty-ms';
 import React from 'react';
-import { PodResource, Node } from '../util/types';
+import { PodResource } from '../util/types';
 
 const PodDetailsComponent = (props: Props): JSX.Element => {
   const getAgeInHours = (d: Date | undefined): string => {
@@ -20,16 +20,7 @@ const PodDetailsComponent = (props: Props): JSX.Element => {
             <div>
               <b>Name:</b> {props.selectedPod?.name}
             </div>
-            <div
-              className={
-                props.selectedPod?.nodeName === props.selectedNode?.name ? 'node-selected' : 'node'
-              }
-              onClick={() =>
-                props.setSelectedNode(
-                  props.nodes.find((n) => n.name === props.selectedPod?.nodeName)
-                )
-              }
-            >
+            <div>
               <b>Node:</b> {props.selectedPod?.nodeName}
             </div>
             <div>
@@ -69,7 +60,4 @@ export default PodDetailsComponent;
 
 interface Props {
   selectedPod?: PodResource;
-  selectedNode?: Node;
-  nodes: Node[];
-  setSelectedNode: (n?: Node) => void;
 }

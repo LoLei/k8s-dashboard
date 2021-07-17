@@ -73,25 +73,6 @@
         .pod-status-phase-other {
           color: red;
         }
-
-        .node {
-          cursor: pointer;
-
-          &:hover {
-            text-decoration: underline;
-          }
-        }
-
-        .node-selected {
-          font-weight: bold;
-          text-decoration: underline;
-        }
-      }
-
-      .node-details {
-        display: flex;
-        flex-direction: column;
-        text-align: left;
       }
     }
 
