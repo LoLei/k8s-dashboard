@@ -28,7 +28,6 @@ class ClusterApi implements IClusterApi {
     console.log(`Fetching backend response from ${url}`);
     const res = await fetch(url);
     const json = await res.json();
-    console.log(json);
     return json as ApiResponseNodes;
   }
 }

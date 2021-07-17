@@ -10,14 +10,12 @@ export default function Home(): JSX.Element {
   const getPodsFromApi = async (): Promise<ApiResponsePods> => {
     const res = await fetch('/api/pods');
     const json = await res.json();
-    console.log(json);
     return json as ApiResponsePods;
   };
 
   const getNodesFromApi = async (): Promise<ApiResponseNodes> => {
     const res = await fetch('/api/nodes');
     const json = await res.json();
-    console.log(json);
     return json as ApiResponseNodes;
   };
 
