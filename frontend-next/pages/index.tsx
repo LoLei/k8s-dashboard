@@ -22,11 +22,15 @@ export default function Home(): JSX.Element {
     return json as ApiResponseNodes;
   };
 
-  const callApi = (): void => {
-    console.log('calling api');
-    getPodsFromApi().then((r) => setNamespacedPods(r.items));
-    getNodesFromApi().then((r) => setNodes(r.nodes));
-    // TODO: Update this after the calls are done
+  const callApi = async (): Promise<void> => {
+    const [promisePods, promiseNodes] = [getPodsFromApi(), getNodesFromApi()];
+
+    const responsePods = await promisePods;
+    const responseNodes = await promiseNodes;
+
+    setNamespacedPods(responsePods.items);
+    setNodes(responseNodes.nodes);
+
     setLastUpdated(new Date());
   };
 
@@ -38,13 +42,11 @@ export default function Home(): JSX.Element {
     console.log(autoRefresh);
   }, [autoRefresh]);
 
-  const handleRefreshButtonClicked = (e: React.MouseEvent<HTMLElement>) => {
-    console.log(e);
+  const handleRefreshButtonClicked = () => {
     callApi();
   };
 
-  const handleRefreshCheckClicked = (e: React.MouseEvent<HTMLElement>) => {
-    console.log(e);
+  const handleRefreshCheckClicked = () => {
     setAutoRefresh(!autoRefresh);
   };
 
