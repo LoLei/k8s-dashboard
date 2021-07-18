@@ -10,7 +10,7 @@ export default function Home(): JSX.Element {
   const [autoRefresh, setAutoRefresh] = useState<boolean>(false);
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
   const [intervalId, setIntervalId] = useState<NodeJS.Timer | undefined>(undefined);
-  const refreshRateSeconds = 30; // TODO: Make configurable (perhaps)
+  const refreshRateSeconds = parseInt(process.env.NEXT_PUBLIC_REFRESH_RATE_SECONDS || '30');
 
   useEffect(() => {
     callApi();
@@ -37,13 +37,8 @@ export default function Home(): JSX.Element {
   };
 
   const callApi = async (): Promise<void> => {
-    const [promisePods, promiseNodes] = [getPodsFromApi(), getNodesFromApi()];
-
-    // TODO: Use Promise.all or Promise.allSettled
-    // (Doesn't matter much, is already concurrent)
-
-    const responsePods = await promisePods;
-    const responseNodes = await promiseNodes;
+    console.log('callAPi');
+    const [responsePods, responseNodes] = await Promise.all([getPodsFromApi(), getNodesFromApi()]);
 
     setNamespacedPods(responsePods.items);
     setNodes(responseNodes.nodes);
@@ -74,7 +69,7 @@ export default function Home(): JSX.Element {
           <BiRefresh />
         </button>
         {' | '}
-        <input type="checkbox" onClick={handleRefreshCheckClicked} />
+        <input type="checkbox" onClick={handleRefreshCheckClicked} checked={autoRefresh} />
         <span title={`${refreshRateSeconds}s`}>Auto refresh</span>
         {' | '}
         <span title="Last updated">

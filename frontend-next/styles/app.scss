@@ -3,7 +3,7 @@
 
 .App {
   text-align: center;
-  background-color: #282c34;
+  background-color: black;
   color: white;
   font-size: calc(10px + 1vmin);
   min-height: 100vh;
@@ -111,9 +111,10 @@
 
   footer {
     flex: 0;
+    font-size: 0.75em;
   }
 }
 
 a {
-  color: #61dafb;
+  color: #2a5399;
 }

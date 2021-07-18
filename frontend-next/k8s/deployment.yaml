@@ -5,6 +5,7 @@ metadata:
 data:
   CLUSTER_API_BACKEND_URL: 'http://k8s-dashboard-backend-node-svc'
   CLUSTER_API_BACKEND_PORT: '4000'
+  NEXT_PUBLIC_REFRESH_RATE_SECONDS: '30'
 ---
 apiVersion: apps/v1
 kind: Deployment
