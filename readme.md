@@ -20,6 +20,6 @@ The UI will (probably) be improved.
 
 ## Screenshot
 
-![Screenshot 2021-07-18 at 11-55-05 k8s-dashboard](https://user-images.githubusercontent.com/9076894/126062973-7cf879d1-4c44-4df8-819e-c9b338aa3200.png)
+![Screenshot 2021-07-18 at 15-32-31 k8s-dashboard](https://user-images.githubusercontent.com/9076894/126069024-5eeca188-4c37-49b5-be63-9c2eae75647b.png)
 
 <sup>This screenshot may be out of date.</sup>
