@@ -3,7 +3,7 @@ import { ApiResponseNodes, ApiResponsePods, NamespacedPods, Node } from '../util
 import ContainerNamespacedPodsComponent from '../components/ContainerNamespacedPodsComponent';
 import ContainerNodesComponent from '../components/ContainerNodesComponent';
 import SeparatorComponent from '../components/SeparatorComponent';
-import { BiRefresh } from 'react-icons/bi';
+import { HiRefresh } from 'react-icons/hi';
 import Head from 'next/head';
 
 export default function Home(): JSX.Element {
@@ -71,7 +71,7 @@ export default function Home(): JSX.Element {
       <div className="App">
         <div className="refresh-container">
           <button onClick={handleRefreshButtonClicked} disabled={autoRefresh}>
-            <BiRefresh />
+            <HiRefresh />
           </button>
           <SeparatorComponent />
           <input type="checkbox" onChange={handleRefreshCheckClicked} checked={autoRefresh} />

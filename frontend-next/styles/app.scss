@@ -11,6 +11,20 @@
 
   .refresh-container {
     font-size: 0.75em;
+
+    input {
+      cursor: pointer;
+    }
+
+    button {
+      background-color: black;
+      border: 0;
+      cursor: pointer;
+
+      svg {
+        color: white;
+      }
+    }
   }
 
   .content-container {
