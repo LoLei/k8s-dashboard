@@ -6,7 +6,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ApiResponsePods>
 ): Promise<void> {
-  console.log(`Got request for pods from ${req.connection.remoteAddress}`);
+  console.log(`Got request for pods from ${req.socket.remoteAddress}`);
   const clusterApi = ClusterApi.Instance;
   const backendRes = await clusterApi.pods();
   res.status(200).json(backendRes);
