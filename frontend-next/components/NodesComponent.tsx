@@ -4,7 +4,9 @@ import { Node } from '../util/types';
 const NodesComponent = (props: Props): JSX.Element => {
   return (
     <>
-      <h3>Nodes:</h3>
+      <div>
+      <h3>Nodes ({props.nodes.length})</h3>
+      </div>
       <div className="nodes">
         {props.nodes.map((node, idx) => {
           return (

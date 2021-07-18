@@ -4,7 +4,7 @@ import { NamespacedPods, PodResource } from '../util/types';
 const PodsComponent = (props: Props): JSX.Element => {
   return (
     <>
-      {props.selectedNamespace !== '' && <h3>Pods:</h3>}
+      {props.selectedNamespace !== '' && <h3>Pods ({props.namespacedPods[props.selectedNamespace].length})</h3>}
       <div className="pods">
         {props.selectedNamespace !== '' &&
           props.namespacedPods[props.selectedNamespace].map((pod, idx) => {

@@ -4,7 +4,7 @@ import { NamespacedPods } from '../util/types';
 const NamespacesComponent = (props: Props): JSX.Element => {
   return (
     <>
-      <h3>Namespaces:</h3>
+      <h3>Namespaces ({Object.keys(props.namespacedPods).length})</h3>
       <div className="namespaces">
         {Object.keys(props.namespacedPods).map((ns, idx) => {
           return (

@@ -13,7 +13,7 @@ const PodDetailsComponent = (props: Props): JSX.Element => {
 
   return (
     <>
-      {props.selectedPod != null && <h3>Pod Details:</h3>}
+      {props.selectedPod != null && <h3>Pod Details</h3>}
       <div className="pod-details">
         {props.selectedPod != null && (
           <>

@@ -5,7 +5,7 @@ import { Node } from '../util/types';
 const NodeDetailsComponent = (props: Props): JSX.Element => {
   return (
     <>
-      {props.selectedNode != null && <h3>Node Details:</h3>}
+      {props.selectedNode != null && <h3>Node Details</h3>}
       {props.selectedNode != null && (
         <div className="node-details">
           <div>
