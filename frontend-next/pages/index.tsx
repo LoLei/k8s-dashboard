@@ -37,7 +37,6 @@ export default function Home(): JSX.Element {
   };
 
   const callApi = async (): Promise<void> => {
-    console.log('callAPi');
     const [responsePods, responseNodes] = await Promise.all([getPodsFromApi(), getNodesFromApi()]);
 
     setNamespacedPods(responsePods.items);
