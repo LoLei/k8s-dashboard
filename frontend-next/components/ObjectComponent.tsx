@@ -1,10 +1,23 @@
 import React from 'react';
 import { NodeInfo, NodeResource } from '../util/types';
+import prettyBytes from 'pretty-bytes';
 
 /**
  * Displays the keys and values of an object in an <ul>
  */
 const ObjectComponent = (props: Props): JSX.Element => {
+  const formatValue = (value: number | string): string => {
+    if (props.title == 'Status') {
+      return value as string;
+    }
+    if (props.title === 'CPU') {
+      return (value as number).toFixed(3);
+    }
+    if (props.title === 'Memory') {
+      return prettyBytes(parseInt(value as string));
+    }
+  };
+
   return (
     <>
       <b>{props.title}:</b>
@@ -12,7 +25,7 @@ const ObjectComponent = (props: Props): JSX.Element => {
         {Object.entries(props.objectToDisplay).map((it, idx) => {
           return (
             <li key={idx}>
-              <b>{it[0]}:</b> {it[1]}
+              <b>{it[0]}:</b> {formatValue(it[1])}
             </li>
           );
         })}
@@ -24,7 +37,6 @@ const ObjectComponent = (props: Props): JSX.Element => {
 export default ObjectComponent;
 
 interface Props {
-  title: string;
-  // objectToDisplay: Record<string, unknown>;
+  title?: 'CPU' | 'Memory' | 'Status';
   objectToDisplay: NodeInfo | NodeResource;
 }
