@@ -5,7 +5,7 @@ const NodesComponent = (props: Props): JSX.Element => {
   return (
     <>
       <div>
-      <h3>Nodes ({props.nodes.length})</h3>
+        <h3>Nodes ({props.nodes.length})</h3>
       </div>
       <div className="nodes">
         {props.nodes.map((node, idx) => {
