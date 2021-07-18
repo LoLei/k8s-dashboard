@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ApiResponseNodes, ApiResponsePods, NamespacedPods, Node } from '../util/types';
 import ContainerNamespacedPodsComponent from '../components/ContainerNamespacedPodsComponent';
 import ContainerNodesComponent from '../components/ContainerNodesComponent';
+import SeparatorComponent from '../components/SeparatorComponent';
 import { BiRefresh } from 'react-icons/bi';
 import Head from 'next/head';
 
@@ -72,10 +73,10 @@ export default function Home(): JSX.Element {
           <button onClick={handleRefreshButtonClicked} disabled={autoRefresh}>
             <BiRefresh />
           </button>
-          {' | '}
+          <SeparatorComponent />
           <input type="checkbox" onChange={handleRefreshCheckClicked} checked={autoRefresh} />
           <span title={`${refreshRateSeconds}s`}>Auto refresh</span>
-          {' | '}
+          <SeparatorComponent />
           <span title="Last updated">
             Last:{' '}
             {lastUpdated.toLocaleDateString(undefined, {
@@ -102,7 +103,7 @@ export default function Home(): JSX.Element {
           <a href="https://lolei.dev" target="_blank" rel="noreferrer">
             Home
           </a>
-          {' | '}
+          <SeparatorComponent />
           <a href="https://github.com/LoLei/k8s-dashboard" target="_blank" rel="noreferrer">
             Source
           </a>
