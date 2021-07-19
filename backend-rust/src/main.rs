@@ -45,16 +45,6 @@ async fn index() -> Result<Json<Message>, Status> {
         println!("Found Pod: {}", p.name());
     }
 
-    // for p in match pods.list(&lp).await {
-    //     Ok(p) => p,
-    //     Err(e) => {
-    //         println!("{}", e);
-    //         return Err(Status::InternalServerError);
-    //     }
-    // } {
-    //     println!("Found Pod: {}", p.name());
-    // }
-
     Ok(Json(Message { id: Some(4) }))
 }
 
