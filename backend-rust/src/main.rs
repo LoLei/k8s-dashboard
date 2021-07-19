@@ -31,24 +31,29 @@ async fn index() -> Result<Json<Message>, Status> {
     .await
     .unwrap();
 
-    let client = match Client::try_from(config) {
-        // let client = match Client::try_default().await { // This should work in the cluster
-        Ok(c) => c,
-        _ => return Err(Status::InternalServerError),
-    };
+    let client = Client::try_from(config).map_err(|_| Status::InternalServerError)?;
+    // let client = Client::try_default().await.map_err(|_| Status::InternalServerError)?; // This should work in the cluster
 
     let pods: Api<Pod> = Api::all(client);
     let lp = ListParams::default();
 
-    for p in match pods.list(&lp).await {
-        Ok(p) => p,
-        Err(e) => {
-            println!("{}", e);
-            return Err(Status::InternalServerError);
-        }
-    } {
+    for p in pods
+        .list(&lp)
+        .await
+        .map_err(|_| Status::InternalServerError)?
+    {
         println!("Found Pod: {}", p.name());
     }
+
+    // for p in match pods.list(&lp).await {
+    //     Ok(p) => p,
+    //     Err(e) => {
+    //         println!("{}", e);
+    //         return Err(Status::InternalServerError);
+    //     }
+    // } {
+    //     println!("Found Pod: {}", p.name());
+    // }
 
     Ok(Json(Message { id: Some(4) }))
 }
