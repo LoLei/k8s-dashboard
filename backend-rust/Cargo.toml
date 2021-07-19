@@ -1,0 +1,12 @@
+[package]
+name = "k8s-dashboard-backend"
+version = "0.1.0"
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+rocket = { version = "0.5.0-rc.1", features = ["json"]}
+kube = "0.58.1"
+kube-runtime = "0.58.1"
+k8s-openapi = { version = "0.12.0", default-features = false, features = ["v1_20"] }
