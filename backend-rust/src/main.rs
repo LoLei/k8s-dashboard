@@ -8,7 +8,9 @@ use rocket::serde::json::Json;
 async fn index() -> Result<Json<Message>, Status> {
     let res = k8s_dashboard_backend::pods()
         .await
-        .map_err(|_| Status::InternalServerError)?;
+        // If a Status context is attached to the anyhow error this Status would be returned from the route,
+        // otherwise the 500 Status is returned
+        .map_err(|e| e.downcast().unwrap_or(Status::InternalServerError))?;
 
     Ok(res)
 }

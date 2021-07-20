@@ -1,10 +1,12 @@
 pub mod types;
 
+use anyhow::Context;
 use k8s_openapi::api::core::v1::Pod;
 use kube::api::ListParams;
 use kube::config::KubeConfigOptions;
 use kube::{Api, Client};
 use kube::{Config, ResourceExt};
+use rocket::http::Status;
 use rocket::serde::json::Json;
 use std::convert::TryFrom;
 use types::Message;
@@ -17,7 +19,8 @@ pub async fn pods() -> Result<Json<Message>, anyhow::Error> {
         context: None,
         user: Some(String::from("rust")), // This user had to be created specifically https://github.com/kube-rs/kube-rs/issues/196
     })
-    .await?;
+    .await
+    .context(Status::ImATeapot)?; // For demonstration, this status would also be returned in the route if this fails
 
     let client = Client::try_from(config)?;
     // let client = Client::try_default().await?; // This should work in the cluster
