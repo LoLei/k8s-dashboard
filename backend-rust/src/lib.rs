@@ -1,1 +1,30 @@
+use k8s_openapi::api::core::v1::Pod;
+use kube::api::ListParams;
+use kube::config::KubeConfigOptions;
+use kube::{Api, Client};
+use kube::{Config, ResourceExt};
+use std::convert::TryFrom;
 
+pub async fn pods() -> Result<(), anyhow::Error> {
+    // TODO: Move this into rocket initialization or somewhere else so it's not done for each request
+    // This should not be necessary in the cluster
+    let config = Config::from_kubeconfig(&KubeConfigOptions {
+        cluster: None,
+        context: None,
+        user: Some(String::from("rust")), // This user had to be created specifically https://github.com/kube-rs/kube-rs/issues/196
+    })
+    .await
+    .unwrap();
+
+    let client = Client::try_from(config)?;
+    // let client = Client::try_default().await.map_err(|_| Status::InternalServerError)?; // This should work in the cluster
+
+    let pods: Api<Pod> = Api::all(client);
+    let lp = ListParams::default();
+
+    for p in pods.list(&lp).await? {
+        println!("Found Pod: {}", p.name());
+    }
+
+    Ok(())
+}
