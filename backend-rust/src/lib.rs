@@ -17,8 +17,7 @@ pub async fn pods() -> Result<Json<Message>, anyhow::Error> {
         context: None,
         user: Some(String::from("rust")), // This user had to be created specifically https://github.com/kube-rs/kube-rs/issues/196
     })
-    .await
-    .unwrap();
+    .await?;
 
     let client = Client::try_from(config)?;
     // let client = Client::try_default().await?; // This should work in the cluster
