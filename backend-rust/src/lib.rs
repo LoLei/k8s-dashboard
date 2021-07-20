@@ -1,11 +1,15 @@
+pub mod types;
+
 use k8s_openapi::api::core::v1::Pod;
 use kube::api::ListParams;
 use kube::config::KubeConfigOptions;
 use kube::{Api, Client};
 use kube::{Config, ResourceExt};
+use rocket::serde::json::Json;
 use std::convert::TryFrom;
+use types::Message;
 
-pub async fn pods() -> Result<(), anyhow::Error> {
+pub async fn pods() -> Result<Json<Message>, anyhow::Error> {
     // TODO: Move this into rocket initialization or somewhere else so it's not done for each request
     // This should not be necessary in the cluster
     let config = Config::from_kubeconfig(&KubeConfigOptions {
@@ -17,7 +21,7 @@ pub async fn pods() -> Result<(), anyhow::Error> {
     .unwrap();
 
     let client = Client::try_from(config)?;
-    // let client = Client::try_default().await.map_err(|_| Status::InternalServerError)?; // This should work in the cluster
+    // let client = Client::try_default().await?; // This should work in the cluster
 
     let pods: Api<Pod> = Api::all(client);
     let lp = ListParams::default();
@@ -26,5 +30,5 @@ pub async fn pods() -> Result<(), anyhow::Error> {
         println!("Found Pod: {}", p.name());
     }
 
-    Ok(())
+    Ok(Json(Message { id: Some(4) }))
 }
