@@ -7,11 +7,12 @@ use kube::config::KubeConfigOptions;
 use kube::{Api, Client};
 use kube::{Config, ResourceExt};
 use rocket::http::Status;
-use rocket::serde::json::Json;
 use std::convert::TryFrom;
-use types::Message;
+use types::NamespacedPods;
+use types::PodResource;
+use types::Spec;
 
-pub async fn pods() -> Result<Json<Message>, anyhow::Error> {
+pub async fn pods() -> Result<NamespacedPods, anyhow::Error> {
     // TODO: Move this into rocket initialization or somewhere else so it's not done for each request
     // This should not be necessary in the cluster
     let config = Config::from_kubeconfig(&KubeConfigOptions {
@@ -28,9 +29,31 @@ pub async fn pods() -> Result<Json<Message>, anyhow::Error> {
     let pods: Api<Pod> = Api::all(client);
     let lp = ListParams::default();
 
+    // TODO: Avoid ITM
+    let mut namespaced_pods = NamespacedPods::new();
+
     for p in pods.list(&lp).await? {
         println!("Found Pod: {}", p.name());
+        let ns = match p.namespace() {
+            Some(x) => x,
+            None => continue,
+        };
+        let pod_resource = PodResource {
+            name: p.name(),
+            namespace: String::from(&ns),
+            nodeName: "".into(), // TODO
+            spec: Spec {
+                containerImages: vec![], // TODO
+            },
+            status: types::Status {
+                phase: "".into(), // TODO
+                startTime: "".into(), // TODO
+                restartCount: 0, // TODO
+            },
+        };
+        let l = namespaced_pods.entry(ns).or_insert(Vec::<PodResource>::new());
+        l.push(pod_resource);
     }
 
-    Ok(Json(Message { id: Some(4) }))
+    Ok(namespaced_pods)
 }

@@ -1,8 +1,14 @@
 #[macro_use]
 extern crate rocket;
-use k8s_dashboard_backend::types::Message;
 use rocket::http::Status;
+use rocket::serde::{Deserialize, Serialize};
 use rocket::serde::json::Json;
+
+#[derive(Serialize, Deserialize)]
+#[serde(crate = "rocket::serde")]
+struct Message {
+    message: String,
+}
 
 #[get("/")]
 async fn index() -> Result<Json<Message>, Status> {
@@ -12,7 +18,9 @@ async fn index() -> Result<Json<Message>, Status> {
         // otherwise the 500 Status is returned
         .map_err(|e| e.downcast().unwrap_or(Status::InternalServerError))?;
 
-    Ok(res)
+    dbg!(res);
+
+    Ok(Json(Message { message: String::from("hello") }))
 }
 
 #[launch]
