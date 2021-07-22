@@ -41,14 +41,39 @@ pub async fn pods() -> Result<NamespacedPods, anyhow::Error> {
         let pod_resource = PodResource {
             name: p.name(),
             namespace: String::from(&ns),
-            nodeName: "".into(), // TODO
+            nodeName: match p.spec.clone() {
+                Some(x) => x,
+                None => continue,
+            }
+            .node_name,
             spec: Spec {
-                containerImages: vec![], // TODO
+                containerImages: match p.spec.clone() {
+                    Some(x) => x,
+                    None => continue,
+                }
+                .containers
+                .iter()
+                .map(|it| it.image.clone())
+                .collect(),
             },
             status: types::Status {
-                phase: "".into(),     // TODO
-                startTime: "".into(), // TODO
-                restartCount: 0,      // TODO
+                phase: match p.status.clone() {
+                    Some(x) => x,
+                    None => continue,
+                }
+                .phase,
+                startTime: match p.status.clone() {
+                    Some(x) => x,
+                    None => continue,
+                }
+                .start_time,
+                restartCount: match p.status.clone() {
+                    Some(x) => x,
+                    None => continue,
+                }
+                .container_statuses
+                .iter()
+                .fold(0, |acc, it| acc + it.restart_count),
             },
         };
         let l = namespaced_pods

@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 
+use k8s_openapi::apimachinery::pkg::apis::meta::v1::Time;
 use rocket::serde::{Deserialize, Serialize};
 
 pub type NamespacedPods = HashMap<String, Vec<PodResource>>;
@@ -9,7 +10,7 @@ pub type NamespacedPods = HashMap<String, Vec<PodResource>>;
 pub struct PodResource {
     pub name: String,
     pub namespace: String,
-    pub nodeName: String,
+    pub nodeName: Option<String>,
     pub spec: Spec,
     pub status: Status,
 }
@@ -17,15 +18,15 @@ pub struct PodResource {
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(crate = "rocket::serde")]
 pub struct Spec {
-    pub containerImages: Vec<String>,
+    pub containerImages: Vec<Option<String>>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(crate = "rocket::serde")]
 pub struct Status {
-    pub phase: String,
-    pub startTime: String,
-    pub restartCount: usize,
+    pub phase: Option<String>,
+    pub startTime: Option<Time>,
+    pub restartCount: i32,
 }
 
 #[derive(Serialize, Deserialize)]
