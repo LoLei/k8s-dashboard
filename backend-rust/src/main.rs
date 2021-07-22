@@ -1,8 +1,8 @@
 #[macro_use]
 extern crate rocket;
 use rocket::http::Status;
-use rocket::serde::{Deserialize, Serialize};
 use rocket::serde::json::Json;
+use rocket::serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize)]
 #[serde(crate = "rocket::serde")]
@@ -20,7 +20,9 @@ async fn index() -> Result<Json<Message>, Status> {
 
     dbg!(res);
 
-    Ok(Json(Message { message: String::from("hello") }))
+    Ok(Json(Message {
+        message: String::from("hello"),
+    }))
 }
 
 #[launch]

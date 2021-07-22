@@ -46,12 +46,14 @@ pub async fn pods() -> Result<NamespacedPods, anyhow::Error> {
                 containerImages: vec![], // TODO
             },
             status: types::Status {
-                phase: "".into(), // TODO
+                phase: "".into(),     // TODO
                 startTime: "".into(), // TODO
-                restartCount: 0, // TODO
+                restartCount: 0,      // TODO
             },
         };
-        let l = namespaced_pods.entry(ns).or_insert(Vec::<PodResource>::new());
+        let l = namespaced_pods
+            .entry(ns)
+            .or_insert(Vec::<PodResource>::new());
         l.push(pod_resource);
     }
 
