@@ -114,10 +114,7 @@ app.get('/api/k8s/pods:full?', async (req: Request, res: Response): Promise<Resp
       status: {
         phase: v1p.status?.phase,
         startTime: v1p.status?.startTime,
-        restartCount: v1p.status?.containerStatuses?.reduce(
-          (acc, it) => (acc += it.restartCount),
-          0
-        ),
+        restartCount: v1p.status?.containerStatuses?.reduce((acc, it) => acc + it.restartCount, 0),
       },
     };
 
