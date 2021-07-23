@@ -1,35 +1,20 @@
 pub mod types;
+mod util;
 
-use anyhow::Context;
 use k8s_openapi::api::core::v1::{Node, Pod};
 use kube::api::ListParams;
-use kube::config::KubeConfigOptions;
-use kube::{Api, Client};
-use kube::{Config, ResourceExt};
-use rocket::http::Status;
-use std::convert::TryFrom;
-use types::NamespacedPods;
+use kube::Api;
+use kube::Client;
+use kube::ResourceExt;
 use types::NodeStatus;
 use types::PodResource;
 use types::Spec;
+use types::{KubeClient, NamespacedPods};
 
 use crate::types::{NodeInfo, NodeResource};
 
-pub async fn pods() -> Result<NamespacedPods, anyhow::Error> {
-    // TODO: Move this into rocket initialization or somewhere else so it's not done for each request
-    // This should not be necessary in the cluster
-    let config = Config::from_kubeconfig(&KubeConfigOptions {
-        cluster: None,
-        context: None,
-        user: Some(String::from("rust")), // This user had to be created specifically https://github.com/kube-rs/kube-rs/issues/196
-    })
-    .await
-    .context(Status::ImATeapot)?; // For demonstration, this status would also be returned in the route if this fails
-
-    let client = Client::try_from(config)?;
-    // let client = Client::try_default().await?; // This should work in the cluster
-
-    let pods: Api<Pod> = Api::all(client);
+pub async fn pods(client: &Client) -> Result<NamespacedPods, anyhow::Error> {
+    let pods: Api<Pod> = Api::all(client.to_owned());
     let lp = ListParams::default();
 
     // TODO: Avoid ITM
@@ -88,21 +73,8 @@ pub async fn pods() -> Result<NamespacedPods, anyhow::Error> {
     Ok(namespaced_pods)
 }
 
-pub async fn nodes() -> Result<Vec<types::Node>, anyhow::Error> {
-    // TODO: Move this into rocket initialization or somewhere else so it's not done for each request
-    // This should not be necessary in the cluster
-    let config = Config::from_kubeconfig(&KubeConfigOptions {
-        cluster: None,
-        context: None,
-        user: Some(String::from("rust")), // This user had to be created specifically https://github.com/kube-rs/kube-rs/issues/196
-    })
-    .await
-    .context(Status::ImATeapot)?; // For demonstration, this status would also be returned in the route if this fails
-
-    let client = Client::try_from(config)?;
-    // let client = Client::try_default().await?; // This should work in the cluster
-
-    let nodes: Api<Node> = Api::all(client);
+pub async fn nodes(client: &Client) -> Result<Vec<types::Node>, anyhow::Error> {
+    let nodes: Api<Node> = Api::all(client.to_owned());
     let lp = ListParams::default();
 
     // TODO: Avoid ITM

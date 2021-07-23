@@ -1,7 +1,12 @@
 use std::collections::HashMap;
 
 use k8s_openapi::apimachinery::pkg::apis::meta::v1::Time;
+use kube::Client;
 use rocket::serde::{Deserialize, Serialize};
+
+pub struct KubeClient {
+    pub client: Client,
+}
 
 pub type NamespacedPods = HashMap<String, Vec<PodResource>>;
 
