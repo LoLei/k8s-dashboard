@@ -26,42 +26,28 @@ pub async fn pods(client: &Client) -> Result<NamespacedPods, anyhow::Error> {
             Some(x) => x,
             None => continue,
         };
+        let spec = match p.spec.clone() {
+            Some(x) => x,
+            None => continue,
+        };
+        let status = match p.status.clone() {
+            Some(x) => x,
+            None => continue,
+        };
         let pod_resource = PodResource {
             name: p.name(),
             namespace: String::from(&ns),
-            nodeName: match p.spec.clone() {
-                Some(x) => x,
-                None => continue,
-            }
-            .node_name,
+            nodeName: spec.node_name,
             spec: Spec {
-                containerImages: match p.spec.clone() {
-                    Some(x) => x,
-                    None => continue,
-                }
-                .containers
-                .iter()
-                .map(|it| it.image.clone())
-                .collect(),
+                containerImages: spec.containers.iter().map(|it| it.image.clone()).collect(),
             },
             status: types::Status {
-                phase: match p.status.clone() {
-                    Some(x) => x,
-                    None => continue,
-                }
-                .phase,
-                startTime: match p.status.clone() {
-                    Some(x) => x,
-                    None => continue,
-                }
-                .start_time,
-                restartCount: match p.status.clone() {
-                    Some(x) => x,
-                    None => continue,
-                }
-                .container_statuses
-                .iter()
-                .fold(0, |acc, it| acc + it.restart_count),
+                phase: status.phase,
+                startTime: status.start_time,
+                restartCount: status
+                    .container_statuses
+                    .iter()
+                    .fold(0, |acc, it| acc + it.restart_count),
             },
         };
         let l = namespaced_pods
