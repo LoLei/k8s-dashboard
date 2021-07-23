@@ -21,7 +21,6 @@ pub async fn pods(client: &Client) -> Result<NamespacedPods, anyhow::Error> {
     let mut namespaced_pods = NamespacedPods::new();
 
     for p in pods.list(&lp).await? {
-        println!("Found Pod: {}", p.name());
         let ns = match p.namespace() {
             Some(x) => x,
             None => continue,
