@@ -11,8 +11,8 @@ struct Message {
     message: String,
 }
 
-#[get("/")]
-async fn index() -> Result<Json<NamespacedPods>, Status> {
+#[get("/api/k8s/pods")]
+async fn pods() -> Result<Json<NamespacedPods>, Status> {
     let res = k8s_dashboard_backend::pods()
         .await
         // If a Status context is attached to the anyhow error this Status would be returned from the route,
@@ -26,5 +26,5 @@ async fn index() -> Result<Json<NamespacedPods>, Status> {
 
 #[launch]
 fn rocket() -> _ {
-    rocket::build().mount("/", routes![index])
+    rocket::build().mount("/", routes![pods])
 }
