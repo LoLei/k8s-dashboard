@@ -67,3 +67,11 @@ pub struct NodeResource {
     pub requestTotal: String,
     pub limitTotal: String,
 }
+
+#[derive(Serialize, Deserialize)]
+#[serde(crate = "rocket::serde")]
+pub struct ResourceStatus {
+    pub request: u32,
+    pub limit: u32,
+    pub resourceType: String,
+}
