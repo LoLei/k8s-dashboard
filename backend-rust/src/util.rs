@@ -70,8 +70,8 @@ fn resource_for_pod(pod: &Pod, resource: &str) -> ResourceStatus {
 /// Same functionality as quantityToScalar in the Javascript API client
 /// https://github.com/kubernetes-client/javascript/blob/6b713dc83f494e03845fca194b84e6bfbd86f31c/src/util.ts#L17
 fn quantity_to_scalar(q: &Quantity) -> u64 {
-    // bytfmt uses Mb etc instead of Mi etc
-    let bytes: u64 = bytefmt::parse(q.0.to_owned().replace("i", "b")).unwrap();
+    // bytfmt uses Mib etc instead of Mi etc
+    let bytes: u64 = bytefmt::parse(q.0.to_owned().replace("i", "ib")).unwrap();
     dbg!(bytes);
     bytes
 }
@@ -85,13 +85,13 @@ mod tests {
     fn test_quantity_to_scalar_mb() {
         let quantity = Quantity("1574Mi".into());
         let scalar = quantity_to_scalar(&quantity);
-        assert_eq!(scalar, 1574_000_000)
+        assert_eq!(scalar, 1_650_458_624)
     }
 
     #[test]
     fn test_quantity_to_scalar_gb() {
         let quantity = Quantity("1.5Gi".into());
         let scalar = quantity_to_scalar(&quantity);
-        assert_eq!(scalar, 1500_000_000)
+        assert_eq!(scalar, 1_610_612_736)
     }
 }
