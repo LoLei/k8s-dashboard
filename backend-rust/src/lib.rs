@@ -6,10 +6,10 @@ use kube::api::ListParams;
 use kube::Api;
 use kube::Client;
 use kube::ResourceExt;
+use types::NamespacedPods;
 use types::NodeStatus;
 use types::PodResource;
 use types::Spec;
-use types::{KubeClient, NamespacedPods};
 
 use crate::types::{NodeInfo, NodeResource};
 
