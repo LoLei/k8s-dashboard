@@ -2,6 +2,7 @@ pub mod types;
 mod util;
 
 use k8s_openapi::api::core::v1::{Node, Pod};
+use k8s_openapi::apimachinery::pkg::api::resource::Quantity;
 use kube::api::ListParams;
 use kube::Api;
 use kube::Client;
@@ -86,15 +87,26 @@ pub async fn nodes(client: &Client) -> Result<Vec<types::Node>, anyhow::Error> {
                     osImage: node_info.os_image,
                 },
             },
+            // TODO: These two creations could be refactored into one method with a resource type parameter
             cpu: NodeResource {
                 // TODO
-                capacity: "".into(),
+                capacity: status
+                    .allocatable
+                    .get("cpu")
+                    .unwrap_or(&Quantity("0".into()))
+                    .clone()
+                    .0,
                 requestTotal: "".into(),
                 limitTotal: "".into(),
             },
             memory: NodeResource {
                 // TODO
-                capacity: "".into(),
+                capacity: status
+                    .allocatable
+                    .get("memory")
+                    .unwrap_or(&Quantity("0".into()))
+                    .clone()
+                    .0,
                 requestTotal: "".into(),
                 limitTotal: "".into(),
             },
