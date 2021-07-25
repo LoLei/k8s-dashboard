@@ -52,12 +52,14 @@ fn resource_for_pod(pod: &Pod, resource: &str) -> ResourceStatus {
     // TODO: Remove unwraps
     spec.containers.iter().for_each(|c| {
         request_total = request_total
-            + quantity_to_scalar(c.resources.clone().unwrap().requests.get(resource).unwrap());
+            // Not every container has requests defined
+            + quantity_to_scalar(c.resources.clone().unwrap().requests.get(resource).unwrap_or(&Quantity("0".to_string())));
     });
 
     spec.containers.iter().for_each(|c| {
         limit_total = limit_total
-            + quantity_to_scalar(c.resources.clone().unwrap().limits.get(resource).unwrap());
+            // Not every container has limits defined
+            + quantity_to_scalar(c.resources.clone().unwrap().limits.get(resource).unwrap_or(&Quantity("0".to_string())));
     });
 
     ResourceStatus {
@@ -70,9 +72,32 @@ fn resource_for_pod(pod: &Pod, resource: &str) -> ResourceStatus {
 /// Same functionality as quantityToScalar in the Javascript API client
 /// https://github.com/kubernetes-client/javascript/blob/6b713dc83f494e03845fca194b84e6bfbd86f31c/src/util.ts#L17
 fn quantity_to_scalar(q: &Quantity) -> u64 {
+    let byte_str = q.0.to_owned();
+    println!("byte_str {:?}", byte_str);
+
+    if byte_str.contains("m") {
+        let without_suffix: &str = byte_str.split('m').collect::<Vec<&str>>()[0];
+        println!("without_suffix {:?}", without_suffix);
+        let float_res: f32 = without_suffix.to_string().parse::<f32>().unwrap() / 1000.0;
+        println!("float_res {:?}", float_res);
+        // Return the milli in full instead of 0.something, TODO: Make resources use floats everywhere?
+        // Or differentiate between cpu and memory resource units
+        // Floats are only needed for the CPU resources, not the memory ones...
+        // This reverts the division above, but leave it in for now in case we do wanna return a float here
+        let res = (float_res * 1000.0) as u64;
+        return res;
+    }
+
     // bytfmt uses Mib etc instead of Mi etc
-    let bytes: u64 = bytefmt::parse(q.0.to_owned().replace("i", "ib")).unwrap();
+    let input = byte_str.replace("i", "ib");
+    println!("input {:?}", input);
+    let bytes: u64 = bytefmt::parse(input).unwrap();
     dbg!(bytes);
+
+    // CPU uses milli units, the likelyhood that a memory resource has 1 byte is improbable
+    if bytes == 1 {
+        return bytes * 1000;
+    }
     bytes
 }
 
@@ -91,6 +116,7 @@ async fn resource_for_node(client: &Client, node: &Node, resource: &str) -> Node
 
     // TODO: Avoid ITM
     for p in pods {
+        println!("{:?}", p);
         let resource = resource_for_pod(&p, resource);
         total_pod_request += resource.request;
         total_pod_limit += resource.limit;
