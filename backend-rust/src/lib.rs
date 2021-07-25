@@ -88,28 +88,8 @@ pub async fn nodes(client: &Client) -> Result<Vec<types::Node>, anyhow::Error> {
                 },
             },
             // TODO: These two creations could be refactored into one method with a resource type parameter
-            cpu: NodeResource {
-                // TODO
-                capacity: status
-                    .allocatable
-                    .get("cpu")
-                    .unwrap_or(&Quantity("0".into()))
-                    .clone()
-                    .0,
-                requestTotal: 0,
-                limitTotal: 0,
-            },
-            memory: NodeResource {
-                // TODO
-                capacity: status
-                    .allocatable
-                    .get("memory")
-                    .unwrap_or(&Quantity("0".into()))
-                    .clone()
-                    .0,
-                requestTotal: 0,
-                limitTotal: 0,
-            },
+            cpu: util::cpu_for_node(client, &n).await,
+            memory: util::memory_for_node(client, &n).await,
         });
     }
 

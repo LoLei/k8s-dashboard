@@ -44,6 +44,10 @@ fn resource_for_pod(pod: &Pod, resource: &str) -> ResourceStatus {
     let mut limit_total = 0;
     let spec = pod.spec.clone().unwrap();
 
+    for c in &spec.containers {
+        println!("{:?}", c.resources);
+    }
+
     // TODO: Avoid ITM
     // TODO: Remove unwraps
     spec.containers.iter().for_each(|c| {
@@ -72,20 +76,40 @@ fn quantity_to_scalar(q: &Quantity) -> u64 {
     bytes
 }
 
-pub fn cpu_for_node(node: &Node) -> NodeResource {
-    resource_for_node(node, "cpu")
+pub async fn cpu_for_node(client: &Client, node: &Node) -> NodeResource {
+    resource_for_node(client, node, "cpu").await
 }
 
-pub fn memory_for_node(node: &Node) -> NodeResource {
-    resource_for_node(node, "memory")
+pub async fn memory_for_node(client: &Client, node: &Node) -> NodeResource {
+    resource_for_node(client, node, "memory").await
 }
 
-pub fn resource_for_node(node: &Node, resource: &str) -> NodeResource {
-    // TODO
+async fn resource_for_node(client: &Client, node: &Node, resource: &str) -> NodeResource {
+    let pods = pods_for_node(client, node).await.unwrap();
+    let mut total_pod_request = 0;
+    let mut total_pod_limit = 0;
+
+    // TODO: Avoid ITM
+    for p in pods {
+        let resource = resource_for_pod(&p, resource);
+        total_pod_request += resource.request;
+        total_pod_limit += resource.limit;
+    }
+
+    // TODO: Return result instead of the unwraps
     NodeResource {
-        capacity: "0".into(),
-        requestTotal: 0,
-        limitTotal: 0,
+        capacity: quantity_to_scalar(
+            node.status
+                .clone()
+                .unwrap()
+                .allocatable
+                .get(resource)
+                .unwrap(),
+        )
+        .try_into()
+        .unwrap_or(0),
+        requestTotal: total_pod_request,
+        limitTotal: total_pod_limit,
     }
 }
 
