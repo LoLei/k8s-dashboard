@@ -7,6 +7,7 @@ use k8s_openapi::{
 };
 use kube::{api::ListParams, Api, Client};
 
+use crate::types::NodeResource;
 use crate::types::ResourceStatus;
 
 pub async fn pods_for_node(client: &Client, node: &Node) -> Result<Vec<Pod>, anyhow::Error> {
@@ -39,30 +40,25 @@ pub fn memory_for_pod(pod: &Pod) -> ResourceStatus {
 }
 
 fn resource_for_pod(pod: &Pod, resource: &str) -> ResourceStatus {
-    // let req_total: i64 = Quantity("0".into()).try_into().unwrap();
-    // let req_total: i64 = i64::try_from(Quantity("0".into())).unwrap();
-    let limit_total = 0;
-
-    let x = i64::from(false);
-    let int: i32 = "100m".parse().unwrap();
+    let mut request_total = 0;
+    let mut limit_total = 0;
+    let spec = pod.spec.clone().unwrap();
 
     // TODO: Avoid ITM
-    // TODO: Remove unwrap
-    // TODO: Re-implement quantityToScalar: https://github.com/kubernetes-client/javascript/blob/6b713dc83f494e03845fca194b84e6bfbd86f31c/src/util.ts#L17
-    /*pod.spec.unwrap().containers.iter().for_each(|c| {
-        req_total = req_total
-            + c.resources
-                .unwrap()
-                .requests
-                .get(resource)
-                .unwrap()
-                .to_owned();
-    });*/
+    // TODO: Remove unwraps
+    spec.containers.iter().for_each(|c| {
+        request_total = request_total
+            + quantity_to_scalar(c.resources.clone().unwrap().requests.get(resource).unwrap());
+    });
 
-    // TODO
+    spec.containers.iter().for_each(|c| {
+        limit_total = limit_total
+            + quantity_to_scalar(c.resources.clone().unwrap().limits.get(resource).unwrap());
+    });
+
     ResourceStatus {
-        request: 0,
-        limit: 0,
+        request: request_total.try_into().unwrap_or(0),
+        limit: limit_total.try_into().unwrap_or(0),
         resourceType: resource.into(),
     }
 }
@@ -74,6 +70,23 @@ fn quantity_to_scalar(q: &Quantity) -> u64 {
     let bytes: u64 = bytefmt::parse(q.0.to_owned().replace("i", "ib")).unwrap();
     dbg!(bytes);
     bytes
+}
+
+pub fn cpu_for_node(node: &Node) -> NodeResource {
+    resource_for_node(node, "cpu")
+}
+
+pub fn memory_for_node(node: &Node) -> NodeResource {
+    resource_for_node(node, "memory")
+}
+
+pub fn resource_for_node(node: &Node, resource: &str) -> NodeResource {
+    // TODO
+    NodeResource {
+        capacity: "0".into(),
+        requestTotal: 0,
+        limitTotal: 0,
+    }
 }
 
 #[cfg(test)]

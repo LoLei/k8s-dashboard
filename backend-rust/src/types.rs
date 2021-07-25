@@ -64,8 +64,8 @@ pub struct NodeInfo {
 #[serde(crate = "rocket::serde")]
 pub struct NodeResource {
     pub capacity: String, // TODO: These should be string number union
-    pub requestTotal: String,
-    pub limitTotal: String,
+    pub requestTotal: u32,
+    pub limitTotal: u32,
 }
 
 #[derive(Serialize, Deserialize)]

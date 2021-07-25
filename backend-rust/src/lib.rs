@@ -96,8 +96,8 @@ pub async fn nodes(client: &Client) -> Result<Vec<types::Node>, anyhow::Error> {
                     .unwrap_or(&Quantity("0".into()))
                     .clone()
                     .0,
-                requestTotal: "".into(),
-                limitTotal: "".into(),
+                requestTotal: 0,
+                limitTotal: 0,
             },
             memory: NodeResource {
                 // TODO
@@ -107,8 +107,8 @@ pub async fn nodes(client: &Client) -> Result<Vec<types::Node>, anyhow::Error> {
                     .unwrap_or(&Quantity("0".into()))
                     .clone()
                     .0,
-                requestTotal: "".into(),
-                limitTotal: "".into(),
+                requestTotal: 0,
+                limitTotal: 0,
             },
         });
     }
