@@ -4,6 +4,13 @@ use k8s_openapi::apimachinery::pkg::apis::meta::v1::Time;
 use kube::Client;
 use rocket::serde::{Deserialize, Serialize};
 
+#[derive(Deserialize, Debug)]
+#[serde(crate = "rocket::serde")]
+pub struct RocketConfig {
+    port: u16,
+    cluster_deployment: bool,
+}
+
 pub struct KubeClient {
     pub client: Client,
 }
