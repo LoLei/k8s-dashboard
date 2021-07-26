@@ -2,17 +2,15 @@ pub mod types;
 mod util;
 
 use k8s_openapi::api::core::v1::{Node, Pod};
-use k8s_openapi::apimachinery::pkg::api::resource::Quantity;
 use kube::api::ListParams;
 use kube::Api;
 use kube::Client;
 use kube::ResourceExt;
 use types::NamespacedPods;
+use types::NodeInfo;
 use types::NodeStatus;
 use types::PodResource;
 use types::Spec;
-
-use crate::types::{NodeInfo, NodeResource};
 
 pub async fn pods(client: &Client) -> Result<NamespacedPods, anyhow::Error> {
     let pods: Api<Pod> = Api::all(client.to_owned());

@@ -1,4 +1,3 @@
-use std::convert::TryFrom;
 use std::convert::TryInto;
 
 use k8s_openapi::{
@@ -31,11 +30,11 @@ pub async fn pods_for_node(client: &Client, node: &Node) -> Result<Vec<Pod>, any
     Ok(filtered_pods)
 }
 
-pub fn cpu_for_pod(pod: &Pod) -> ResourceStatus {
+pub fn _cpu_for_pod(pod: &Pod) -> ResourceStatus {
     resource_for_pod(pod, "cpu")
 }
 
-pub fn memory_for_pod(pod: &Pod) -> ResourceStatus {
+pub fn _memory_for_pod(pod: &Pod) -> ResourceStatus {
     resource_for_pod(pod, "memory")
 }
 
