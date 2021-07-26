@@ -2,7 +2,7 @@
 extern crate rocket;
 use std::convert::TryFrom;
 
-use k8s_dashboard_backend::types::{KubeClient, NamespacedPods, Node, RocketConfig};
+use k8s_dashboard_backend::types::{ApiResponseNodes, ApiResponsePods, KubeClient, RocketConfig};
 use kube::config::KubeConfigOptions;
 use kube::{Client, Config};
 use rocket::http::Status;
@@ -10,23 +10,23 @@ use rocket::serde::json::Json;
 use rocket::State;
 
 #[get("/api/k8s/pods")]
-async fn pods(kube_client: &State<KubeClient>) -> Result<Json<NamespacedPods>, Status> {
-    let res = k8s_dashboard_backend::pods(&kube_client.client)
+async fn pods(kube_client: &State<KubeClient>) -> Result<Json<ApiResponsePods>, Status> {
+    let items = k8s_dashboard_backend::pods(&kube_client.client)
         .await
         // If a Status context is attached to the anyhow error this Status would be returned from the route,
         // otherwise the 500 Status is returned
         .map_err(|e| e.downcast().unwrap_or(Status::InternalServerError))?;
 
-    Ok(Json(res))
+    Ok(Json(ApiResponsePods { items }))
 }
 
 #[get("/api/k8s/nodes")]
-async fn nodes(kube_client: &State<KubeClient>) -> Result<Json<Vec<Node>>, Status> {
-    let res = k8s_dashboard_backend::nodes(&kube_client.client)
+async fn nodes(kube_client: &State<KubeClient>) -> Result<Json<ApiResponseNodes>, Status> {
+    let nodes = k8s_dashboard_backend::nodes(&kube_client.client)
         .await
         .map_err(|e| e.downcast().unwrap_or(Status::InternalServerError))?;
 
-    Ok(Json(res))
+    Ok(Json(ApiResponseNodes { nodes }))
 }
 
 #[launch]

@@ -15,6 +15,12 @@ pub struct KubeClient {
     pub client: Client,
 }
 
+#[derive(Serialize, Deserialize)]
+#[serde(crate = "rocket::serde")]
+pub struct ApiResponsePods {
+    pub items: NamespacedPods,
+}
+
 pub type NamespacedPods = HashMap<String, Vec<PodResource>>;
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -39,6 +45,12 @@ pub struct Status {
     pub phase: Option<String>,
     pub startTime: Option<Time>,
     pub restartCount: i32,
+}
+
+#[derive(Serialize, Deserialize)]
+#[serde(crate = "rocket::serde")]
+pub struct ApiResponseNodes {
+    pub nodes: Vec<Node>,
 }
 
 #[derive(Serialize, Deserialize)]
