@@ -1,10 +1,14 @@
-# Courtesy of https://gitlab.com/cocainefarm/gnulag/catinator/-/blob/master/Containerfile
+# Inspiration courtesy of:
+# * https://gitlab.com/cocainefarm/gnulag/catinator/-/blob/master/Containerfile
+# * https://gitlab.com/cocainefarm/pastor/-/blob/master/Containerfile
 
 # ------------------------------------------------------------------------------
 # Cargo Build Stage
 # ------------------------------------------------------------------------------
 
 FROM rust:1.53-alpine as cargo-build
+
+RUN apk add openssl-dev
 
 RUN rustup default nightly && rustup update
 
@@ -21,6 +25,14 @@ RUN cargo build --release
 
 FROM alpine:3.13
 
-COPY --from=cargo-build /work/target/release/k8s-dashboard-backend /usr/local/bin
+RUN apk add openssl
+RUN adduser rocket -D
 
-CMD ["/usr/local/bin/k8s-dashboard-backend"]
+WORKDIR /app
+
+COPY --from=cargo-build /work/target/release/k8s-dashboard-backend .
+COPY --from=cargo-build /work/Rocket.toml .
+
+USER rocket
+
+CMD ["./k8s-dashboard-backend"]

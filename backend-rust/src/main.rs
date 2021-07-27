@@ -39,7 +39,7 @@ async fn rocket() -> _ {
     let client = if rocket_config.cluster_deployment {
         Client::try_default()
             .await
-            .expect("Could not create kub client")
+            .expect("Could not create kube client via cluster method")
     } else {
         let kube_config = Config::from_kubeconfig(&KubeConfigOptions {
             cluster: None,
@@ -50,7 +50,7 @@ async fn rocket() -> _ {
         .await
         .expect("Could not create kube kube_config");
 
-        Client::try_from(kube_config).expect("Could not create kube client")
+        Client::try_from(kube_config).expect("Could not create kube client via config method")
     };
 
     rocket
