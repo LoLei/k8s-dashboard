@@ -35,18 +35,23 @@ async fn rocket() -> _ {
     let figment = rocket.figment();
 
     let rocket_config: RocketConfig = figment.extract().expect("Could not extract Rocket config");
-    dbg!(rocket_config);
 
-    let kube_config = Config::from_kubeconfig(&KubeConfigOptions {
-        cluster: None,
-        context: None,
-        user: Some(String::from("rust")), // This user had to be created specifically https://github.com/kube-rs/kube-rs/issues/196
-    })
-    .await
-    .expect("Could not create kube kube_config");
+    let client = if rocket_config.cluster_deployment {
+        Client::try_default()
+            .await
+            .expect("Could not create kub client")
+    } else {
+        let kube_config = Config::from_kubeconfig(&KubeConfigOptions {
+            cluster: None,
+            context: None,
+            // This user had to be created specifically https://github.com/kube-rs/kube-rs/issues/196
+            user: Some(String::from("rust")),
+        })
+        .await
+        .expect("Could not create kube kube_config");
 
-    let client = Client::try_from(kube_config).expect("Could not create kube client");
-    // let client = Client::try_default().await?; // This should work in the cluster
+        Client::try_from(kube_config).expect("Could not create kube client")
+    };
 
     rocket
         .mount("/", routes![pods, nodes])

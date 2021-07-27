@@ -8,7 +8,7 @@ use rocket::serde::{Deserialize, Serialize};
 #[serde(crate = "rocket::serde")]
 pub struct RocketConfig {
     port: u16,
-    cluster_deployment: bool,
+    pub cluster_deployment: bool,
 }
 
 pub struct KubeClient {
