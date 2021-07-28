@@ -9,6 +9,11 @@ use rocket::http::Status;
 use rocket::serde::json::Json;
 use rocket::State;
 
+#[get("/api/health")]
+async fn health() -> Status {
+    Status::Ok
+}
+
 #[get("/api/k8s/pods")]
 async fn pods(kube_client: &State<KubeClient>) -> Result<Json<ApiResponsePods>, Status> {
     let items = k8s_dashboard_backend::pods(&kube_client.client)
@@ -54,6 +59,6 @@ async fn rocket() -> _ {
     };
 
     rocket
-        .mount("/", routes![pods, nodes])
+        .mount("/", routes![pods, nodes, health])
         .manage(KubeClient { client })
 }
