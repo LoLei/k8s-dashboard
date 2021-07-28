@@ -8,8 +8,6 @@
 
 FROM rust:1.53-alpine as cargo-build
 
-RUN apk add openssl-dev
-
 RUN rustup default nightly && rustup update
 
 WORKDIR /work
@@ -24,8 +22,6 @@ RUN cargo build --release
 # ------------------------------------------------------------------------------
 
 FROM alpine:3.13
-
-RUN apk add openssl
 
 WORKDIR /app
 
