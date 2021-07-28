@@ -5,6 +5,8 @@ metadata:
 data:
   ROCKET_PORT: "4000"
   ROCKET_CLUSTER_DEPLOYMENT: "true"
+  # Workaround needed as per https://github.com/kube-rs/kube-rs/issues/587#issuecomment-877314745
+  KUBERNETES_SERVICE_HOST: "kubernetes.default.svc"
 ---
 apiVersion: apps/v1
 kind: Deployment
