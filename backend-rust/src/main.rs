@@ -40,6 +40,7 @@ async fn rocket() -> _ {
     let figment = rocket.figment();
 
     let rocket_config: RocketConfig = figment.extract().expect("Could not extract Rocket config");
+    println!("{:?}", rocket_config);
 
     let client = if rocket_config.cluster_deployment {
         Client::try_default()

@@ -3,9 +3,8 @@ kind: ConfigMap
 metadata:
   name: k8s-dashboard-backend-rust-configmap
 data:
-  # These should be read from the Rocket.toml but can be overwritten here
-  ROCKET_PORT: 4000
-  ROCKET_CLUSTER_DEPLOYMENT: true
+  ROCKET_PORT: "4000"
+  ROCKET_CLUSTER_DEPLOYMENT: "true"
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -25,7 +24,7 @@ spec:
     spec:
       containers:
         - name: k8s-dashboard-backend-rust
-          image: ghcr.io/lolei/k8s-dashboard-backend-rust:1.0.1
+          image: ghcr.io/lolei/k8s-dashboard-backend-rust:1.0.2
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 4000
