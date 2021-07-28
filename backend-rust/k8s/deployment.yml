@@ -1,0 +1,61 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: k8s-dashboard-backend-rust-configmap
+data:
+  # These should be read from the Rocket.toml but can be overwritten here
+  ROCKET_PORT: 4000
+  ROCKET_CLUSTER_DEPLOYMENT: true
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8s-dashboard-backend-rust-depl
+  labels:
+    app: k8s-dashboard-backend-rust
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: k8s-dashboard-backend-rust
+  template:
+    metadata:
+      labels:
+        app: k8s-dashboard-backend-rust
+    spec:
+      containers:
+        - name: k8s-dashboard-backend-rust
+          image: ghcr.io/lolei/k8s-dashboard-backend-rust:1.0.1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 4000
+          envFrom:
+            - configMapRef:
+                name: k8s-dashboard-backend-rust-configmap
+          livenessProbe:
+            initialDelaySeconds: 10
+            httpGet:
+              port: 4000
+              path: /api/health
+          readinessProbe:
+            initialDelaySeconds: 10
+            httpGet:
+              port: 4000
+              path: /api/health
+      imagePullSecrets:
+        - name: regcred
+      serviceAccountName: k8s-dashboard
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: k8s-dashboard-backend-rust-svc
+  labels:
+    run: k8s-dashboard-backend-rust
+spec:
+  selector:
+    app: k8s-dashboard-backend-rust
+  ports:
+    - protocol: TCP
+      port: 4000
+      targetPort: 4000

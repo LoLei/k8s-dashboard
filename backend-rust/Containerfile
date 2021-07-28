@@ -26,13 +26,9 @@ RUN cargo build --release
 FROM alpine:3.13
 
 RUN apk add openssl
-RUN adduser rocket -D
 
 WORKDIR /app
 
 COPY --from=cargo-build /work/target/release/k8s-dashboard-backend .
-COPY --from=cargo-build /work/Rocket.toml .
-
-USER rocket
 
 CMD ["./k8s-dashboard-backend"]
