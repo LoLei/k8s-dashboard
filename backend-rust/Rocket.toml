@@ -1,6 +1,8 @@
 [default]
+address = "localhost"
 port = 4000
 cluster_deployment = false
 
 [release]
+address = "0.0.0.0"
 cluster_deployment = true

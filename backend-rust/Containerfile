@@ -23,6 +23,8 @@ RUN cargo build --release
 
 FROM alpine:3.13
 
+RUN apk add openssl
+
 WORKDIR /app
 
 COPY --from=cargo-build /work/target/release/k8s-dashboard-backend .
