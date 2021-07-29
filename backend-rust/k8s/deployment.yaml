@@ -6,7 +6,7 @@ data:
   ROCKET_PORT: "4000"
   ROCKET_CLUSTER_DEPLOYMENT: "true"
   # Workaround needed as per https://github.com/kube-rs/kube-rs/issues/587#issuecomment-877314745
-  KUBERNETES_SERVICE_HOST: "kubernetes.default.svc"
+  #KUBERNETES_SERVICE_HOST: "kubernetes.default.svc"
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -26,7 +26,7 @@ spec:
     spec:
       containers:
         - name: k8s-dashboard-backend-rust
-          image: ghcr.io/lolei/k8s-dashboard-backend-rust:1.0.4
+          image: ghcr.io/lolei/k8s-dashboard-backend-rust:1.0.5
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 4000
@@ -35,12 +35,12 @@ spec:
                 name: k8s-dashboard-backend-rust-configmap
           livenessProbe:
             # TODO: Decrease delay after debugging
-            initialDelaySeconds: 60
+            initialDelaySeconds: 300
             httpGet:
               port: 4000
               path: /api/health
           readinessProbe:
-            initialDelaySeconds: 60
+            initialDelaySeconds: 300
             httpGet:
               port: 4000
               path: /api/health

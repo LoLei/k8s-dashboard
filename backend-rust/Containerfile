@@ -27,4 +27,6 @@ WORKDIR /app
 
 COPY --from=cargo-build /work/target/release/k8s-dashboard-backend .
 
+EXPOSE 4000
+
 CMD ["./k8s-dashboard-backend"]
