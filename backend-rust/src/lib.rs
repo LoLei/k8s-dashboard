@@ -16,7 +16,6 @@ pub async fn pods(client: &Client) -> Result<NamespacedPods, anyhow::Error> {
     let pods: Api<Pod> = Api::all(client.to_owned());
     let lp = ListParams::default();
 
-    // TODO: Avoid ITM
     let mut namespaced_pods = NamespacedPods::new();
 
     for p in pods.list(&lp).await? {
@@ -61,7 +60,6 @@ pub async fn nodes(client: &Client) -> Result<Vec<types::Node>, anyhow::Error> {
     let nodes: Api<Node> = Api::all(client.to_owned());
     let lp = ListParams::default();
 
-    // TODO: Avoid ITM
     let mut res_nodes = Vec::<types::Node>::new();
 
     for n in nodes.list(&lp).await? {
@@ -85,7 +83,6 @@ pub async fn nodes(client: &Client) -> Result<Vec<types::Node>, anyhow::Error> {
                     osImage: node_info.os_image,
                 },
             },
-            // TODO: These two creations could be refactored into one method with a resource type parameter
             cpu: util::cpu_for_node(client, &n).await,
             memory: util::memory_for_node(client, &n).await,
         });
