@@ -1,6 +1,7 @@
 pub mod types;
 mod util;
 
+use anyhow::Context;
 use k8s_openapi::api::core::v1::{Node, Pod};
 use kube::api::ListParams;
 use kube::Api;
@@ -86,10 +87,10 @@ pub async fn nodes(client: &Client) -> Result<Vec<types::Node>, anyhow::Error> {
             },
             cpu: util::cpu_for_node(client, &n)
                 .await
-                .ok_or(anyhow::format_err!("CPU resources not found"))?,
+                .context(Status::InternalServerError)?,
             memory: util::memory_for_node(client, &n)
                 .await
-                .ok_or(anyhow::format_err!("Memory resources not found"))?,
+                .context(Status::InternalServerError)?,
         });
     }
 
