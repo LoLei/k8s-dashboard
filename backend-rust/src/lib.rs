@@ -6,6 +6,7 @@ use kube::api::ListParams;
 use kube::Api;
 use kube::Client;
 use kube::ResourceExt;
+use rocket::http::Status;
 use types::NamespacedPods;
 use types::NodeInfo;
 use types::NodeStatus;
@@ -83,8 +84,12 @@ pub async fn nodes(client: &Client) -> Result<Vec<types::Node>, anyhow::Error> {
                     osImage: node_info.os_image,
                 },
             },
-            cpu: util::cpu_for_node(client, &n).await,
-            memory: util::memory_for_node(client, &n).await,
+            cpu: util::cpu_for_node(client, &n)
+                .await
+                .ok_or(anyhow::format_err!("CPU resources not found"))?,
+            memory: util::memory_for_node(client, &n)
+                .await
+                .ok_or(anyhow::format_err!("Memory resources not found"))?,
         });
     }
 

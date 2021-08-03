@@ -97,16 +97,16 @@ fn quantity_to_scalar(q: &Quantity) -> u64 {
     bytes
 }
 
-pub async fn cpu_for_node(client: &Client, node: &Node) -> NodeResource {
+pub async fn cpu_for_node(client: &Client, node: &Node) -> Option<NodeResource> {
     resource_for_node(client, node, "cpu").await
 }
 
-pub async fn memory_for_node(client: &Client, node: &Node) -> NodeResource {
+pub async fn memory_for_node(client: &Client, node: &Node) -> Option<NodeResource> {
     resource_for_node(client, node, "memory").await
 }
 
-async fn resource_for_node(client: &Client, node: &Node, resource: &str) -> NodeResource {
-    let pods = pods_for_node(client, node).await.unwrap();
+async fn resource_for_node(client: &Client, node: &Node, resource: &str) -> Option<NodeResource> {
+    let pods = pods_for_node(client, node).await.ok()?;
 
     let (total_pod_request, total_pod_limit) = pods.iter().fold((0, 0), |(acc1, acc2), p| {
         let resource = resource_for_pod(&p, resource);
@@ -114,20 +114,13 @@ async fn resource_for_node(client: &Client, node: &Node, resource: &str) -> Node
     });
 
     // TODO: Return result instead of the unwraps
-    NodeResource {
-        capacity: quantity_to_scalar(
-            node.status
-                .clone()
-                .unwrap()
-                .allocatable
-                .get(resource)
-                .unwrap(),
-        )
-        .try_into()
-        .unwrap_or(0),
+    Some(NodeResource {
+        capacity: quantity_to_scalar(node.status.clone()?.allocatable.get(resource)?)
+            .try_into()
+            .ok()?,
         requestTotal: total_pod_request,
         limitTotal: total_pod_limit,
-    }
+    })
 }
 
 #[cfg(test)]
