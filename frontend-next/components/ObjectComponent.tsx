@@ -10,7 +10,6 @@ const ObjectComponent = (props: Props): JSX.Element => {
     if (props.title == 'Status') {
       return value as string;
     }
-    // TODO: Check whether the backend already returns the resource as a human readable string
     if (props.title === 'CPU') {
       return (value as number).toFixed(3);
     }

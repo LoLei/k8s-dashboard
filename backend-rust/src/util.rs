@@ -39,22 +39,30 @@ pub fn _memory_for_pod(pod: &Pod) -> ResourceStatus {
 }
 
 fn resource_for_pod(pod: &Pod, resource: &str) -> ResourceStatus {
-    let mut request_total = 0;
-    let mut limit_total = 0;
     let spec = pod.spec.clone().unwrap();
 
-    // TODO: Avoid ITM
-    // TODO: Remove unwraps
-    spec.containers.iter().for_each(|c| {
-        request_total = request_total
-            // Not every container has requests defined
-            + quantity_to_scalar(c.resources.clone().unwrap().requests.get(resource).unwrap_or(&Quantity("0".to_string())));
+    // TODO: Avoid unwraps
+    let request_total = spec.containers.iter().fold(0, |acc, c| {
+        return acc
+            + quantity_to_scalar(
+                c.resources
+                    .clone()
+                    .unwrap()
+                    .requests
+                    .get(resource)
+                    .unwrap_or(&Quantity("0".to_string())),
+            );
     });
-
-    spec.containers.iter().for_each(|c| {
-        limit_total = limit_total
-            // Not every container has limits defined
-            + quantity_to_scalar(c.resources.clone().unwrap().limits.get(resource).unwrap_or(&Quantity("0".to_string())));
+    let limit_total = spec.containers.iter().fold(0, |acc, c| {
+        return acc
+            + quantity_to_scalar(
+                c.resources
+                    .clone()
+                    .unwrap()
+                    .limits
+                    .get(resource)
+                    .unwrap_or(&Quantity("0".to_string())),
+            );
     });
 
     ResourceStatus {
@@ -72,9 +80,6 @@ fn quantity_to_scalar(q: &Quantity) -> u64 {
     if byte_str.contains("m") {
         let without_suffix: &str = byte_str.split('m').collect::<Vec<&str>>()[0];
         let float_res: f32 = without_suffix.to_string().parse::<f32>().unwrap() / 1000.0;
-        // Return the milli in full instead of 0.something, TODO: Make resources use floats everywhere?
-        // Or differentiate between cpu and memory resource units
-        // Floats are only needed for the CPU resources, not the memory ones...
         // This reverts the division above, but leave it in for now in case we do wanna return a float here
         let res = (float_res * 1000.0) as u64;
         return res;
