@@ -53,6 +53,7 @@ fn resource_for_pod(pod: &Pod, resource: &str) -> ResourceStatus {
                     .unwrap_or(&Quantity("0".to_string())),
             );
     });
+
     let limit_total = spec.containers.iter().fold(0, |acc, c| {
         return acc
             + quantity_to_scalar(
@@ -106,15 +107,11 @@ pub async fn memory_for_node(client: &Client, node: &Node) -> NodeResource {
 
 async fn resource_for_node(client: &Client, node: &Node, resource: &str) -> NodeResource {
     let pods = pods_for_node(client, node).await.unwrap();
-    let mut total_pod_request = 0;
-    let mut total_pod_limit = 0;
 
-    // TODO: Avoid ITM
-    for p in pods {
+    let (total_pod_request, total_pod_limit) = pods.iter().fold((0, 0), |(acc1, acc2), p| {
         let resource = resource_for_pod(&p, resource);
-        total_pod_request += resource.request;
-        total_pod_limit += resource.limit;
-    }
+        return (acc1 + resource.request, acc2 + resource.limit);
+    });
 
     // TODO: Return result instead of the unwraps
     NodeResource {
