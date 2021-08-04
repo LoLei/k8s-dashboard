@@ -42,37 +42,29 @@ pub fn _memory_for_pod(pod: &Pod) -> Option<ResourceStatus> {
 fn resource_for_pod(pod: &Pod, resource: &str) -> Option<ResourceStatus> {
     let spec = pod.spec.clone()?;
 
-    let request_total =
-        spec.containers
-            .iter()
-            .fold(Some(0), |acc: Option<u64>, c: &Container| -> Option<u64> {
-                let q = quantity_to_scalar(
-                    c.resources
-                        .clone()?
-                        .requests
-                        .get(resource)
-                        .unwrap_or(&Quantity("0".to_string())),
-                );
-                return Some(acc? + q);
-            });
+    let request_total: u64 = spec
+        .containers
+        .iter()
+        .filter_map(|c| {
+            Some(quantity_to_scalar(
+                c.resources.clone()?.requests.get(resource)?,
+            ))
+        })
+        .sum();
 
-    let limit_total =
-        spec.containers
-            .iter()
-            .fold(Some(0), |acc: Option<u64>, c: &Container| -> Option<u64> {
-                let q = quantity_to_scalar(
-                    c.resources
-                        .clone()?
-                        .limits
-                        .get(resource)
-                        .unwrap_or(&Quantity("0".to_string())),
-                );
-                return Some(acc? + q);
-            });
+    let limit_total: u64 = spec
+        .containers
+        .iter()
+        .filter_map(|c| {
+            Some(quantity_to_scalar(
+                c.resources.clone()?.limits.get(resource)?,
+            ))
+        })
+        .sum();
 
     Some(ResourceStatus {
-        request: request_total?.try_into().ok()?,
-        limit: limit_total?.try_into().ok()?,
+        request: request_total.try_into().ok()?,
+        limit: limit_total.try_into().ok()?,
         resourceType: resource.into(),
     })
 }
