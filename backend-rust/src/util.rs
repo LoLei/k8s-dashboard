@@ -1,7 +1,7 @@
 use std::convert::TryInto;
 
 use k8s_openapi::{
-    api::core::v1::{Node, Pod},
+    api::core::v1::{Container, Node, Pod},
     apimachinery::pkg::api::resource::Quantity,
 };
 use kube::{api::ListParams, Api, Client};
@@ -30,47 +30,51 @@ pub async fn pods_for_node(client: &Client, node: &Node) -> Result<Vec<Pod>, any
     Ok(filtered_pods)
 }
 
-pub fn _cpu_for_pod(pod: &Pod) -> ResourceStatus {
+// /*
+pub fn _cpu_for_pod(pod: &Pod) -> Option<ResourceStatus> {
     resource_for_pod(pod, "cpu")
 }
 
-pub fn _memory_for_pod(pod: &Pod) -> ResourceStatus {
+pub fn _memory_for_pod(pod: &Pod) -> Option<ResourceStatus> {
     resource_for_pod(pod, "memory")
 }
 
-fn resource_for_pod(pod: &Pod, resource: &str) -> ResourceStatus {
-    let spec = pod.spec.clone().unwrap();
+fn resource_for_pod(pod: &Pod, resource: &str) -> Option<ResourceStatus> {
+    let spec = pod.spec.clone()?;
 
-    // TODO: Avoid unwraps
-    let request_total = spec.containers.iter().fold(0, |acc, c| {
-        return acc
-            + quantity_to_scalar(
-                c.resources
-                    .clone()
-                    .unwrap()
-                    .requests
-                    .get(resource)
-                    .unwrap_or(&Quantity("0".to_string())),
-            );
-    });
+    let request_total =
+        spec.containers
+            .iter()
+            .fold(Some(0), |acc: Option<u64>, c: &Container| -> Option<u64> {
+                let q = quantity_to_scalar(
+                    c.resources
+                        .clone()?
+                        .requests
+                        .get(resource)
+                        .unwrap_or(&Quantity("0".to_string())),
+                );
+                return Some(acc? + q);
+            });
 
-    let limit_total = spec.containers.iter().fold(0, |acc, c| {
-        return acc
-            + quantity_to_scalar(
-                c.resources
-                    .clone()
-                    .unwrap()
-                    .limits
-                    .get(resource)
-                    .unwrap_or(&Quantity("0".to_string())),
-            );
-    });
+    let limit_total =
+        spec.containers
+            .iter()
+            .fold(Some(0), |acc: Option<u64>, c: &Container| -> Option<u64> {
+                let q = quantity_to_scalar(
+                    c.resources
+                        .clone()?
+                        .limits
+                        .get(resource)
+                        .unwrap_or(&Quantity("0".to_string())),
+                );
+                return Some(acc? + q);
+            });
 
-    ResourceStatus {
-        request: request_total.try_into().unwrap_or(0),
-        limit: limit_total.try_into().unwrap_or(0),
+    Some(ResourceStatus {
+        request: request_total?.try_into().ok()?,
+        limit: limit_total?.try_into().ok()?,
         resourceType: resource.into(),
-    }
+    })
 }
 
 /// Same functionality as quantityToScalar in the Javascript API client
@@ -108,12 +112,16 @@ pub async fn memory_for_node(client: &Client, node: &Node) -> Option<NodeResourc
 async fn resource_for_node(client: &Client, node: &Node, resource: &str) -> Option<NodeResource> {
     let pods = pods_for_node(client, node).await.ok()?;
 
-    let (total_pod_request, total_pod_limit) = pods.iter().fold((0, 0), |(acc1, acc2), p| {
-        let resource = resource_for_pod(&p, resource);
-        return (acc1 + resource.request, acc2 + resource.limit);
-    });
+    let total_pod_request_and_limit = pods.iter().fold(
+        Some((0, 0)),
+        |acc: Option<(u32, u32)>, p: &Pod| -> Option<(u32, u32)> {
+            let res = resource_for_pod(&p, resource)?;
+            return Some((acc?.0 + res.request, acc?.1 + res.limit));
+        },
+    );
 
-    // TODO: Return result instead of the unwraps
+    let (total_pod_request, total_pod_limit) = total_pod_request_and_limit?;
+
     Some(NodeResource {
         capacity: quantity_to_scalar(node.status.clone()?.allocatable.get(resource)?)
             .try_into()
