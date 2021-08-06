@@ -16,9 +16,9 @@ Instead of sending raw requests to the Kubernetes API, a client wrapper is used.
 
 The backend has been implemented with (so far):
 
-- Javascript (Typescript) client: [kubernetes-client-js](https://github.com/kubernetes-client/javascript) (currently deployed)
+- Javascript (Typescript) client: [kubernetes-client-js](https://github.com/kubernetes-client/javascript)
   - Most everything works out of the box, enjoyable experience.
-- Rust client: [kube-rs](https://github.com/clux/kube-rs)
+- Rust client: [kube-rs](https://github.com/clux/kube-rs) (Currently deployed)
   - Particularly the [topNodes](https://github.com/kubernetes-client/javascript/blob/6b713dc83f494e03845fca194b84e6bfbd86f31c/src/top.ts#L20)
     function from the JS client had to be re-implemented, to get node-wide resources. (This would
     not have been necessary if the metrics API was supported.)
