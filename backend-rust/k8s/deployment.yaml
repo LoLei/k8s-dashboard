@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
         - name: k8s-dashboard-backend-rust
-          image: ghcr.io/lolei/k8s-dashboard-backend-rust:1.0.6
+          image: ghcr.io/lolei/k8s-dashboard-backend-rust:1.0.7
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 4000

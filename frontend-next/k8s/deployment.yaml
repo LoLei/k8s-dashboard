@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: k8s-dashboard-frontend-next-configmap
 data:
-  CLUSTER_API_BACKEND_URL: 'http://k8s-dashboard-backend-node-svc'
+  CLUSTER_API_BACKEND_URL: 'http://k8s-dashboard-backend-rust-svc'
   CLUSTER_API_BACKEND_PORT: '4000'
   NEXT_PUBLIC_REFRESH_RATE_SECONDS: '30'
 ---
@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
         - name: k8s-dashboard-frontend-next
-          image: ghcr.io/lolei/k8s-dashboard-frontend-next:1.0.3
+          image: ghcr.io/lolei/k8s-dashboard-frontend-next:1.0.4
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3000
