@@ -6,7 +6,7 @@ const NamespacesComponent = (props: Props): JSX.Element => {
     <>
       <h3>Namespaces ({Object.keys(props.namespacedPods).length})</h3>
       <div className="namespaces">
-        {Object.keys(props.namespacedPods).map((ns, idx) => {
+        {Object.keys(props.namespacedPods).sort((a,b) => a > b ? 1 : -1).map((ns, idx) => {
           return (
             <div
               key={idx}
