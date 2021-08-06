@@ -11,7 +11,7 @@ const ObjectComponent = (props: Props): JSX.Element => {
       return value as string;
     }
     if (props.title === 'CPU') {
-      return (value as number).toFixed(3);
+      return (Math.round((value as number) * 1000) / 1000).toString();
     }
     if (props.title === 'Memory') {
       return prettyBytes(parseInt(value as string));
@@ -20,12 +20,13 @@ const ObjectComponent = (props: Props): JSX.Element => {
 
   return (
     <>
-      <b>{props.title}:</b>
+      <b title={props.title === 'CPU' ? 'vCPU or millicpu' : ''}>{props.title}:</b>
       <ul>
         {Object.entries(props.objectToDisplay).map((it, idx) => {
           return (
             <li key={idx}>
-              <b>{it[0]}:</b> {formatValue(it[1])}
+              <b>{it[0]}:</b>
+              <span title={it[1]}> {formatValue(it[1])}</span>
             </li>
           );
         })}
